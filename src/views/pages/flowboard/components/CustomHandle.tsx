@@ -5,14 +5,17 @@ import { useTheme } from '@mui/system';
 
 import { Handle, HandleProps } from 'reactflow';
 
-type CustomHandleProps = HandleProps & { color?: string | undefined };
+type CustomHandleProps = HandleProps & { color?: string | undefined; hide?: boolean | undefined };
 
-export default function CustomHandle({ color, ...props }: CustomHandleProps) {
+export default function CustomHandle({ color, hide = false, ...props }: CustomHandleProps) {
     const theme = useTheme();
 
-    const handle: CSSProperties = useMemo(() => {
-        console.log('color', color);
+    if (hide) {
+        return null;
+    }
 
+    // eslint-disable-next-line react-hooks/rules-of-hooks
+    const handle: CSSProperties = useMemo(() => {
         return {
             width: 15,
             height: 7,
@@ -21,8 +24,6 @@ export default function CustomHandle({ color, ...props }: CustomHandleProps) {
             border: 'none'
         };
     }, [color, theme.palette.primary.main]);
-
-    // const isValidConnection = (connection) => connection.target === 'B';
 
     return <Handle {...props} style={handle} />;
 }

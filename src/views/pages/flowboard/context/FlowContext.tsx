@@ -1,56 +1,49 @@
-import React, { createContext, useCallback, ReactNode, useMemo, useState, useRef, Dispatch, SetStateAction, RefObject } from 'react';
+import React, { createContext, useCallback, ReactNode, useMemo, useState, useRef } from 'react';
 
 import {
     addEdge,
     applyEdgeChanges,
     applyNodeChanges,
-    Edge,
     Node,
     OnConnect,
+    OnConnectStartParams,
     OnEdgesChange,
     OnNodesChange,
     ReactFlowInstance,
     useEdgesState,
     useNodesState,
+    useReactFlow,
     XYPosition
 } from 'reactflow';
-
-type FlowContextType = {
-    edges: Edge[];
-    nodes: Node[];
-    onConnect: OnConnect;
-    onEdgesChange: OnEdgesChange;
-    onNodesChange: OnNodesChange;
-    setFlowInstance: Dispatch<SetStateAction<any>>;
-    flowWrapper: RefObject<HTMLDivElement>;
-    onDrop: (event: any) => void;
-    onDragOver: (event: any) => void;
-};
+import { FlowContextProps } from '../types/flow';
+import { generateUUID } from '../hooks/helpers';
+import NodesFlowEnum from '../types/NodesEnum';
 
 // Create the FlowContext
-export const FlowContext = createContext<FlowContextType | undefined>(undefined);
+export const FlowContext = createContext<FlowContextProps | undefined>(undefined);
 
 const initialFlow: Node[] = [
     { id: 'start', type: 'skeleton', position: { x: 100, y: 0 }, data: { parent: '', label: 'start' } },
     { id: '1', position: { x: 100, y: 100 }, data: { parent: '', label: 'second' } },
-    { id: '2', position: { x: 200, y: 100 }, data: { parent: '', label: 'third' } }
+    { id: '2', position: { x: 250, y: 100 }, data: { parent: '', label: 'third' } }
 ];
 
 export const FlowContextProvider: React.FC<{ children: ReactNode }> = ({ children }: { children: ReactNode }) => {
     const [flowInstance, setFlowInstance] = useState<ReactFlowInstance | null>(null);
     const flowWrapper = useRef<HTMLDivElement>(null);
 
+    const connectingNodeId = useRef<any>();
+
     const [nodes, setNodes] = useNodesState(initialFlow);
     const [edges, setEdges] = useEdgesState([]);
+
+    const { project } = useReactFlow();
 
     const onNodesChange: OnNodesChange = useCallback((changes) => setNodes((nds) => applyNodeChanges(changes, nds)), [setNodes]);
 
     const onEdgesChange: OnEdgesChange = useCallback((changes) => setEdges((eds) => applyEdgeChanges(changes, eds)), [setEdges]);
 
     const onConnect: OnConnect = useCallback((connection) => setEdges((eds) => addEdge(connection, eds)), [setEdges]);
-
-    let id = 0;
-    const getId = () => `dndnode_${id++}`;
 
     const onDragOver = useCallback((event: React.DragEvent<HTMLDivElement>) => {
         event.preventDefault();
@@ -76,7 +69,7 @@ export const FlowContextProvider: React.FC<{ children: ReactNode }> = ({ childre
             }) ?? { x: 100, y: 100 };
 
             const newNode = {
-                id: getId(),
+                id: `${type}-${generateUUID()}`,
                 type,
                 position,
                 data: { label: `${type} node` }
@@ -84,12 +77,42 @@ export const FlowContextProvider: React.FC<{ children: ReactNode }> = ({ childre
 
             setNodes((nds) => nds.concat(newNode));
         },
-        [flowInstance]
+        [flowInstance, setNodes]
+    );
+
+    const onConnectStart = useCallback((_: any, { nodeId }: OnConnectStartParams) => {
+        connectingNodeId.current = nodeId;
+    }, []);
+
+    const onConnectEnd = useCallback(
+        (event: any) => {
+            // (event: MouseEvent | TouchEvent) => {
+            const targetIsPanel = event.target.classList.contains('react-flow__pane');
+            if (targetIsPanel) {
+                // we need to remove the wrapper bounds, in order to get the correct position
+                const { top, left } = flowWrapper?.current?.getBoundingClientRect() ?? { left: 0, top: 0 };
+
+                const nodeId = `${NodesFlowEnum.skeleton}-${generateUUID()}`;
+
+                const newNode = {
+                    id: nodeId,
+                    type: NodesFlowEnum.skeleton,
+                    // TODO: COPY THE POSITION OF PARENT
+                    // set in center if is the first child
+                    // align if has multiple childs
+                    position: project({ x: event.clientX - left, y: event.clientY - top }),
+                    data: {}
+                };
+                setNodes((nds) => nds.concat(newNode));
+                setEdges((eds) => eds.concat({ id: nodeId, source: connectingNodeId.current, target: nodeId }));
+            }
+        },
+        [project, setEdges, setNodes]
     );
 
     // functions and data to return
-    const contextValue: FlowContextType = useMemo<FlowContextType>(() => {
-        const values: FlowContextType = {
+    const contextValue: FlowContextProps = useMemo<FlowContextProps>(() => {
+        const values: FlowContextProps = {
             nodes,
             edges,
             onNodesChange,
@@ -98,10 +121,24 @@ export const FlowContextProvider: React.FC<{ children: ReactNode }> = ({ childre
             setFlowInstance,
             flowWrapper,
             onDrop,
-            onDragOver
+            onDragOver,
+            onConnectStart,
+            onConnectEnd
         };
         return values;
-    }, [edges, nodes, onConnect, onEdgesChange, onNodesChange, flowWrapper, setFlowInstance, onDrop, onDragOver]);
+    }, [
+        edges,
+        nodes,
+        onConnect,
+        onEdgesChange,
+        onNodesChange,
+        flowWrapper,
+        setFlowInstance,
+        onDrop,
+        onDragOver,
+        onConnectStart,
+        onConnectEnd
+    ]);
 
     return <FlowContext.Provider value={contextValue}>{children}</FlowContext.Provider>;
 };

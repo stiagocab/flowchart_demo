@@ -32,12 +32,8 @@ const NodeSelectorSidebar = ({ isOpen, handleClose }: { isOpen: boolean; handleC
                 </IconButton>
             </Stack>
             <Box sx={{ p: 2 }}>
-                <Typography variant="caption">You can drag these nodes to the pane on the right.</Typography>
-                <div onDragStart={(event) => onDragStart(event, 'input')} draggable>
-                    Input Node
-                </div>
-                <Box sx={{ position: 'relative' }} onDragStart={(event) => onDragStart(event, 'skeleton')} draggable>
-                    <SkeletonNode />
+                <Box sx={{ mb: 1, cursor: 'grab' }} onDragStart={(event) => onDragStart(event, 'skeleton')} draggable>
+                    <SkeletonNode data={{ hideHandle: true, origin: 'SIDE' }} />
                 </Box>
             </Box>
         </Box>

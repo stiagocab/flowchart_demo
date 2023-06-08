@@ -18,7 +18,8 @@ const ReactFlowStyled = styled(ReactFlow)(({ theme }) => ({
 
 export default function CustomFlow() {
     const theme = useTheme();
-    const { nodes, edges, onNodesChange, onEdgesChange, onConnect, setFlowInstance, onDrop, onDragOver } = useFlowContext();
+    const { nodes, edges, onNodesChange, onEdgesChange, onConnect, setFlowInstance, onDrop, onDragOver, onConnectStart, onConnectEnd } =
+        useFlowContext();
     const nodeTypes = useNodesTypes();
 
     return (
@@ -35,6 +36,8 @@ export default function CustomFlow() {
                 onInit={setFlowInstance}
                 onDrop={onDrop}
                 onDragOver={onDragOver}
+                onConnectStart={onConnectStart}
+                onConnectEnd={onConnectEnd}
             >
                 <MiniMapStyled
                     position="bottom-right"
