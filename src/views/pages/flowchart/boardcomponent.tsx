@@ -1,8 +1,8 @@
 import React, { useMemo } from 'react';
 
-import { Box, Typography } from '@mui/material';
+import { Box } from '@mui/material';
 
-import ReactFlow, { Controls, Background, Node, NodeTypes, BackgroundVariant, Panel } from 'reactflow';
+import ReactFlow, { Controls, Background, Node, NodeTypes, BackgroundVariant, Panel, MiniMap } from 'reactflow';
 
 import 'reactflow/dist/style.css';
 import NodesNamesEnum from './customNodes/References';
@@ -32,7 +32,7 @@ export default function BoardComponent() {
     };
 
     return (
-        <Box style={{ width: '100%', height: '600px' }}>
+        <Box sx={{ width: '100%', height: '600px' }}>
             <ReactFlow
                 elementsSelectable
                 nodeTypes={nodeTypes}
@@ -45,10 +45,11 @@ export default function BoardComponent() {
                 // onPaneClick={() => setSelectedNode(null)}
                 onNodeClick={handleOnNodeClick}
             >
+                <MiniMap style={{ backgroundColor: 'navy' }} />
                 <Controls />
-                <Panel position="top-left">
+                {/* <Panel position="top-left">
                     <AvailableNodes />
-                </Panel>
+                </Panel> */}
                 <Background style={{ zIndex: 2 }} variant={BackgroundVariant.Dots} gap={12} size={1} />
             </ReactFlow>
         </Box>

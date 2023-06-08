@@ -61,6 +61,7 @@ export const useCustomFlowContext = () => {
     if (!context) {
         throw new Error('useCustomFlowContext must be used within a CustomFlowContextProvider');
     }
+
     return context;
 };
 

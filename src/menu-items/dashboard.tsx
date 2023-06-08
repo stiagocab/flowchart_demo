@@ -23,7 +23,7 @@ const dashboard: NavItemType = {
             id: 'default',
             title: <FormattedMessage id="default" />,
             type: 'item',
-            url: '/dashboard/default',
+            url: '/flows/customizer',
             icon: icons.IconDashboard,
             breadcrumbs: false
         },
@@ -39,7 +39,7 @@ const dashboard: NavItemType = {
             id: 'flowchart',
             title: 'Data flow editor',
             type: 'item',
-            url: '/dashboard/flowchart',
+            url: '/flows/customizer',
             icon: icons.IconDeviceAnalytics,
             breadcrumbs: false
         }
