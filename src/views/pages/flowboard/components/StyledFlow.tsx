@@ -11,6 +11,7 @@ import ReactFlow, { Controls, Background, BackgroundVariant, MiniMap } from 'rea
 import 'reactflow/dist/style.css';
 import useFlowContext from '../hooks/useFlowContext';
 import useNodesTypes from '../hooks/useNodesTypes';
+import { useDragAndDrop, useFlowChanges, useOnConnect } from '../hooks/flowMethods';
 
 const ReactFlowStyled = styled(ReactFlow)(({ theme }) => ({
     backgroundColor: theme.palette.background.default
@@ -18,8 +19,12 @@ const ReactFlowStyled = styled(ReactFlow)(({ theme }) => ({
 
 export default function CustomFlow() {
     const theme = useTheme();
-    const { nodes, edges, onNodesChange, onEdgesChange, onConnect, setFlowInstance, onDrop, onDragOver, onConnectStart, onConnectEnd } =
-        useFlowContext();
+    const { nodes, edges, setFlowInstance } = useFlowContext();
+
+    const { onNodesChange, onEdgesChange } = useFlowChanges();
+    const { onConnect, onConnectStart, onConnectEnd } = useOnConnect();
+    const { onDrop, onDragOver } = useDragAndDrop();
+
     const nodeTypes = useNodesTypes();
 
     return (
@@ -53,7 +58,6 @@ export default function CustomFlow() {
 const MiniMapStyled = styled(MiniMap)(({ theme }) => ({
     backgroundColor: theme.palette.secondary.main,
     borderRadius: 5,
-
     overflow: 'hidden',
     '& .react-flow__minimap-mask': {
         fill: theme.palette.background.paper
@@ -62,12 +66,3 @@ const MiniMapStyled = styled(MiniMap)(({ theme }) => ({
         fill: theme.palette.secondary.main
     }
 }));
-
-// ".react-flow__minimap-mask" {
-//     fill: ${(props) => props.theme.minimapMaskBg},
-// },
-
-// ".react-flow__minimap-node" {
-//     fill: ${(props) => props.theme.nodeBg},
-//     stroke: none;
-// }

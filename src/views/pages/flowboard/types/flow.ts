@@ -1,16 +1,30 @@
-import React from 'react';
-import { Edge, Node, OnConnect, OnConnectStartParams, OnEdgesChange, OnNodesChange } from 'reactflow';
+import React, { SetStateAction, Dispatch } from 'react';
+import { Edge, Node, OnConnect, OnConnectStartParams, OnEdgesChange, OnNodesChange, Project, ReactFlowInstance } from 'reactflow';
 
 export type FlowContextProps = {
+    connectingNodeId: React.MutableRefObject<any>;
     edges: Edge[];
+    flowInstance: ReactFlowInstance | null;
+    flowWrapper: React.RefObject<HTMLDivElement>;
     nodes: Node[];
-    onConnect: OnConnect;
+    project: Project;
+    setEdges: Dispatch<SetStateAction<Edge<any>[]>>;
+    setFlowInstance: React.Dispatch<React.SetStateAction<any>>;
+    setNodes: Dispatch<SetStateAction<Node<any, string | undefined>[]>>;
+};
+
+export type useFlowChangesProps = {
     onEdgesChange: OnEdgesChange;
     onNodesChange: OnNodesChange;
-    setFlowInstance: React.Dispatch<React.SetStateAction<any>>;
-    flowWrapper: React.RefObject<HTMLDivElement>;
-    onDrop: (event: any) => void;
-    onDragOver: (event: any) => void;
+};
+
+export type useOnConnectProps = {
+    onConnect: OnConnect;
+    onConnectEnd: (event: any) => void;
     onConnectStart: (event: any, params: OnConnectStartParams) => void;
-    onConnectEnd: (event: MouseEvent | TouchEvent) => void;
+};
+
+export type useDragAndDropProps = {
+    onDragOver: (event: React.DragEvent<HTMLDivElement>) => void;
+    onDrop: (event: React.DragEvent<HTMLDivElement>) => void;
 };
