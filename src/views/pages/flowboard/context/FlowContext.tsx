@@ -23,9 +23,9 @@ import NodesFlowEnum from '../types/NodesEnum';
 export const FlowContext = createContext<FlowContextProps | undefined>(undefined);
 
 const initialFlow: Node[] = [
-    { id: 'start', type: 'skeleton', position: { x: 100, y: 0 }, data: { parent: '', label: 'start' } },
-    { id: '1', position: { x: 100, y: 100 }, data: { parent: '', label: 'second' } },
-    { id: '2', position: { x: 250, y: 100 }, data: { parent: '', label: 'third' } }
+    { id: 'start', type: 'skeleton', position: { x: 100, y: 0 }, data: { parent: '', label: 'start', hideHandle: true } }
+    // { id: '1', position: { x: 100, y: 100 }, data: { parent: '', label: 'second' } },
+    // { id: '2', position: { x: 250, y: 100 }, data: { parent: '', label: 'third' } }
 ];
 
 export const FlowContextProvider: React.FC<{ children: ReactNode }> = ({ children }: { children: ReactNode }) => {

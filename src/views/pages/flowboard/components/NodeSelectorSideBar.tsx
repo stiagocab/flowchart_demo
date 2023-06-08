@@ -1,11 +1,10 @@
-import { DragEvent } from 'react';
+import { DragEvent, ReactNode } from 'react';
 
-import { Box, Divider, IconButton, Paper, Stack, Typography, useTheme } from '@mui/material';
+import { Box, IconButton, Stack, Typography } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
-import zIndex from '@mui/material/styles/zIndex';
 import SkeletonNode from '../nodes/SkeletonNode';
 
-const drawerWidth = '25%';
+const drawerWidth = '20%';
 
 const NodeSelectorSidebar = ({ isOpen, handleClose }: { isOpen: boolean; handleClose: () => void }) => {
     const onDragStart = (event: DragEvent<HTMLDivElement>, nodeType: string) => {
@@ -32,12 +31,26 @@ const NodeSelectorSidebar = ({ isOpen, handleClose }: { isOpen: boolean; handleC
                 </IconButton>
             </Stack>
             <Box sx={{ p: 2 }}>
-                <Box sx={{ mb: 1, cursor: 'grab' }} onDragStart={(event) => onDragStart(event, 'skeleton')} draggable>
+                <NodeDragWrapper onDragStart={(event) => onDragStart(event, 'skeleton')}>
                     <SkeletonNode data={{ hideHandle: true, origin: 'SIDE' }} />
-                </Box>
+                </NodeDragWrapper>
+
+                {['input', 'output', 'default'].map((nodeType) => (
+                    <NodeDragWrapper onDragStart={(event) => onDragStart(event, nodeType)}>
+                        <Box sx={{ border: '2px solid white', p: 2, borderRadius: 1 }}>
+                            <Typography sx={{ textAlign: 'center' }}>{nodeType.toUpperCase()}</Typography>
+                        </Box>
+                    </NodeDragWrapper>
+                ))}
             </Box>
         </Box>
     );
 };
 
 export default NodeSelectorSidebar;
+
+const NodeDragWrapper = ({ children, onDragStart }: { children: ReactNode; onDragStart: (event: DragEvent<HTMLDivElement>) => void }) => (
+    <Box sx={{ mb: 1, cursor: 'grab' }} onDragStart={onDragStart} draggable>
+        {children}
+    </Box>
+);

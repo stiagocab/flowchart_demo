@@ -70,7 +70,6 @@ function SkeletonNode({ data }: { data: { hideHandle?: boolean | undefined; orig
                 <AddIcon />
             </Button>
             <CustomHandle hide={data.hideHandle} id="b" type="target" position={Position.Top} color={theme.palette.success.main} />
-            <CustomHandle hide={data.hideHandle} id="a" type="source" position={Position.Bottom} />
 
             <Menu
                 id="available-nodes-selector-menu"

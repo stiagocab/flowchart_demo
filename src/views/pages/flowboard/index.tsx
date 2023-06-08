@@ -19,8 +19,8 @@ function FlowCustomizer() {
     const [isDrawerOpen, setIsDrawerOpen] = useState<boolean>(false);
 
     return (
-        <MainCard title="Customizer" content={false}>
-            <Box sx={{ display: 'flex', position: 'relative', width: 1, height: 500 }}>
+        <MainCard content={false}>
+            <Box sx={{ display: 'flex', position: 'relative', width: 1, height: 520 }}>
                 <NodeSelectorSidebar handleClose={() => setIsDrawerOpen(false)} isOpen={isDrawerOpen} />
                 <Fade in={!isDrawerOpen}>
                     <IconButton
