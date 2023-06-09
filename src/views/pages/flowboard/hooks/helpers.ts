@@ -1,6 +1,6 @@
-import { Node } from 'reactflow';
+import { Node, XYPosition } from 'reactflow';
 
-export function generatePosition(node: Node): { x: number; y: number } {
+export function generatePosition(node: Node): XYPosition {
     return { x: node.position.x, y: node.position.y + 100 };
 }
 

@@ -14,14 +14,12 @@ import { FlowContextProvider } from './context/FlowContext';
 function FlowCustomizer() {
     // hooks
     const theme = useTheme();
-    const { flowWrapper } = useFlowContext();
-
-    const [isDrawerOpen, setIsDrawerOpen] = useState<boolean>(false);
+    const { flowWrapper, isDrawerOpen, openDrawer, closeDrawer } = useFlowContext();
 
     return (
         <MainCard content={false}>
             <Box sx={{ display: 'flex', position: 'relative', width: 1, height: 520 }}>
-                <NodeSelectorSidebar handleClose={() => setIsDrawerOpen(false)} isOpen={isDrawerOpen} />
+                <NodeSelectorSidebar handleClose={closeDrawer} isOpen={isDrawerOpen} />
                 <Fade in={!isDrawerOpen}>
                     <IconButton
                         sx={{
@@ -33,9 +31,7 @@ function FlowCustomizer() {
                             boxShadow: theme.shadows[2],
                             '&:hover': { backgroundColor: theme.palette.background.paper }
                         }}
-                        onClick={() => {
-                            setIsDrawerOpen(true);
-                        }}
+                        onClick={openDrawer}
                     >
                         <SortIcon fontSize="medium" />
                     </IconButton>

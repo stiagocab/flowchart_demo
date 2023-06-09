@@ -113,7 +113,7 @@ export const CustomFlowContextProvider: React.FC<{ children: ReactNode }> = ({ c
 
         const newNode: Node = {
             id: newNodeId,
-            position: generatePosition(selectedNode!),
+            position: { x: 1, y: 2 },
             type: nodeName,
             data: {
                 isFinal: false,
@@ -155,10 +155,6 @@ export const CustomFlowContextProvider: React.FC<{ children: ReactNode }> = ({ c
 
     return <CustomFlowContext.Provider value={contextValue}>{children}</CustomFlowContext.Provider>;
 };
-
-function generatePosition(node: Node): { x: number; y: number } {
-    return { x: node.position.x, y: node.position.y + 100 };
-}
 
 function generateUUID() {
     return 'xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {

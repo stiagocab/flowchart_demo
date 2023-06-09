@@ -1,37 +1,20 @@
+import { useEffect } from 'react';
+
 import { MouseEvent, useState } from 'react';
 
 import AddIcon from '@mui/icons-material/Add';
-import {
-    Button,
-    Divider,
-    IconButton,
-    ListItemIcon,
-    ListItemText,
-    Menu,
-    MenuItem,
-    MenuList,
-    Paper,
-    Typography,
-    useTheme
-} from '@mui/material';
+import { Button, IconButton, Menu, Paper, useTheme } from '@mui/material';
 
-import Cloud from '@mui/icons-material/Cloud';
-import ContentCopy from '@mui/icons-material/ContentCopy';
-import ContentCut from '@mui/icons-material/ContentCut';
-import ContentPaste from '@mui/icons-material/ContentPaste';
 import DeleteIcon from '@mui/icons-material/Delete';
 import SettingsIcon from '@mui/icons-material/Settings';
 
 import { Position } from 'reactflow';
+
 import CustomHandle from '../components/CustomHandle';
+import { ICustomNodeProps } from '../types/nodes';
 
-// styles
-// import styles from '../styles/commonStyles';
-
-function SkeletonNode({ data }: { data: { hideHandle?: boolean | undefined; origin: 'SIDE' | 'BOARD' } }) {
+function SkeletonNode({ data, selected }: ICustomNodeProps) {
     const theme = useTheme();
-    const [isOpenMenu, setIsOpenMenu] = useState<boolean>(false);
-
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
 
     const open = Boolean(anchorEl);
@@ -54,7 +37,7 @@ function SkeletonNode({ data }: { data: { hideHandle?: boolean | undefined; orig
                     paddingY: 1,
                     paddingX: 3,
                     border: '2px dotted',
-                    borderColor: theme.palette.grey[400],
+                    borderColor: selected ? theme.palette.primary.main : theme.palette.grey[400],
                     width: data.origin === 'SIDE' ? 1 : null,
                     cursor: 'inherit',
                     '&:active': {

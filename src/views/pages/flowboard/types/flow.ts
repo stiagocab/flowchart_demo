@@ -1,5 +1,6 @@
 import React, { SetStateAction, Dispatch } from 'react';
 import { Edge, Node, OnConnect, OnConnectStartParams, OnEdgesChange, OnNodesChange, Project, ReactFlowInstance } from 'reactflow';
+import NodesFlowEnum from './NodesEnum';
 
 export type FlowContextProps = {
     connectingNodeId: React.MutableRefObject<any>;
@@ -11,6 +12,12 @@ export type FlowContextProps = {
     setEdges: Dispatch<SetStateAction<Edge<any>[]>>;
     setFlowInstance: React.Dispatch<React.SetStateAction<any>>;
     setNodes: Dispatch<SetStateAction<Node<any, string | undefined>[]>>;
+    selectedNode: Node | null;
+    setSelectedNodeId: React.Dispatch<React.SetStateAction<string | number | null>>;
+    isDrawerOpen: boolean;
+    openDrawerFromNode: (node?: Node | null) => void;
+    closeDrawer: () => void;
+    openDrawer: () => void;
 };
 
 export type useFlowChangesProps = {
@@ -27,4 +34,9 @@ export type useOnConnectProps = {
 export type useDragAndDropProps = {
     onDragOver: (event: React.DragEvent<HTMLDivElement>) => void;
     onDrop: (event: React.DragEvent<HTMLDivElement>) => void;
+};
+
+export type useNodeCreatorProps = {
+    createChildNode: (nodeType: NodesFlowEnum | string) => void;
+    replaceNode: (nodeType: NodesFlowEnum | string) => void;
 };

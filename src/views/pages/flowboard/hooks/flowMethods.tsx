@@ -8,11 +8,14 @@ import {
     OnConnectStartParams,
     OnEdgesChange,
     OnNodesChange,
-    XYPosition
+    XYPosition,
+    Node,
+    Edge
 } from 'reactflow';
+
 import useFlowContext from '../hooks/useFlowContext';
-import { useDragAndDropProps, useFlowChangesProps, useOnConnectProps } from '../types/flow';
-import { generateUUID } from './helpers';
+import { useNodeCreatorProps, useDragAndDropProps, useFlowChangesProps, useOnConnectProps } from '../types/flow';
+import { generatePosition, generateUUID } from './helpers';
 import NodesFlowEnum from '../types/NodesEnum';
 
 export const useFlowChanges = (): useFlowChangesProps => {
@@ -110,4 +113,60 @@ export const useDragAndDrop = (): useDragAndDropProps => {
     );
 
     return { onDragOver, onDrop };
+};
+
+export const useNodeCreator = (): useNodeCreatorProps => {
+    const { setNodes, setEdges, selectedNode } = useFlowContext();
+
+    const createChildNode = (nodeType: NodesFlowEnum | string) => {
+        const newUUID = generateUUID();
+
+        const newNodeId = `node-${nodeType}-${newUUID}`;
+
+        const newNode: Node = {
+            id: newNodeId,
+            position: generatePosition(selectedNode!),
+            type: nodeType,
+            data: {
+                isFinal: false,
+                parent: selectedNode?.id,
+                label: `${nodeType.toUpperCase()}`
+            }
+        };
+
+        setNodes((nds) => [...nds, newNode]);
+
+        const newEdge: Edge = {
+            id: `edge-${nodeType}-${newUUID}`,
+            source: selectedNode?.id!,
+            sourceHandle: 'source',
+            target: newNodeId,
+            targetHandle: 'target'
+        };
+
+        setEdges((eds) => [...eds, newEdge]);
+    };
+
+    const replaceNode = (nodeType: NodesFlowEnum | string) => {
+        const updateData: Node = {
+            id: selectedNode?.id!,
+            position: selectedNode?.position!,
+            type: nodeType,
+            data: {
+                isFinal: false,
+                label: `${nodeType.toUpperCase()}`
+            }
+        };
+
+        setNodes((nds) => [
+            ...nds.map((itemNode: Node) => {
+                if (itemNode.id === updateData.id) {
+                    return { ...updateData };
+                }
+                return { ...itemNode };
+            })
+        ]);
+    };
+
+    return { createChildNode, replaceNode };
 };

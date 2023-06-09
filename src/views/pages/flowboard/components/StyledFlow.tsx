@@ -5,7 +5,7 @@ import { Box, useTheme } from '@mui/material';
 import { styled } from '@mui/system';
 
 // React flow
-import ReactFlow, { Controls, Background, BackgroundVariant, MiniMap } from 'reactflow';
+import ReactFlow, { Controls, Background, BackgroundVariant, MiniMap, Node } from 'reactflow';
 
 // styles
 import 'reactflow/dist/style.css';
@@ -19,13 +19,23 @@ const ReactFlowStyled = styled(ReactFlow)(({ theme }) => ({
 
 export default function CustomFlow() {
     const theme = useTheme();
-    const { nodes, edges, setFlowInstance } = useFlowContext();
+    const { nodes, edges, setFlowInstance, setSelectedNodeId, openDrawerFromNode, closeDrawer } = useFlowContext();
 
     const { onNodesChange, onEdgesChange } = useFlowChanges();
     const { onConnect, onConnectStart, onConnectEnd } = useOnConnect();
     const { onDrop, onDragOver } = useDragAndDrop();
 
     const nodeTypes = useNodesTypes();
+
+    const onNodeClick = (e: React.MouseEvent, node: Node) => {
+        setSelectedNodeId(node.id);
+        openDrawerFromNode(node);
+    };
+
+    const onPaneClick = (event: React.MouseEvent) => {
+        closeDrawer();
+        setSelectedNodeId(null);
+    };
 
     return (
         <Box sx={{ width: '100%', height: '100%' }}>
@@ -43,6 +53,8 @@ export default function CustomFlow() {
                 onDragOver={onDragOver}
                 onConnectStart={onConnectStart}
                 onConnectEnd={onConnectEnd}
+                onNodeClick={onNodeClick}
+                onPaneClick={onPaneClick}
             >
                 <MiniMapStyled
                     position="bottom-right"
