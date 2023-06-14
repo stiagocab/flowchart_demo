@@ -8,12 +8,13 @@ import { Button, IconButton, Menu, Paper, useTheme } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 import SettingsIcon from '@mui/icons-material/Settings';
 
-import { Position } from 'reactflow';
+import { Position, useStoreApi } from 'reactflow';
 
 import CustomHandle from '../components/CustomHandle';
 import { ICustomNodeProps } from '../types/nodes';
 
 function SkeletonNode({ data, selected }: ICustomNodeProps) {
+    const store = useStoreApi();
     const theme = useTheme();
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
 

@@ -1,6 +1,9 @@
 import { Node, XYPosition } from 'reactflow';
 
 export function generatePosition(node: Node): XYPosition {
+    if (!node) {
+        return { x: 100, y: 100 };
+    }
     return { x: node.position.x, y: node.position.y + 100 };
 }
 

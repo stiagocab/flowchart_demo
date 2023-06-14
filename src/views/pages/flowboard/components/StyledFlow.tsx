@@ -7,11 +7,15 @@ import { styled } from '@mui/system';
 // React flow
 import ReactFlow, { Controls, Background, BackgroundVariant, MiniMap, Node } from 'reactflow';
 
-// styles
-import 'reactflow/dist/style.css';
+// hooks
 import useFlowContext from '../hooks/useFlowContext';
 import useNodesTypes from '../hooks/useNodesTypes';
-import { useDragAndDrop, useFlowChanges, useOnConnect } from '../hooks/flowMethods';
+import { useFlowChanges, useOnConnect } from '../hooks/flowMethods';
+import { useDragAndDrop } from '../hooks/useDragAndDrop';
+
+// styles
+import 'reactflow/dist/style.css';
+import '../styles.css';
 
 const ReactFlowStyled = styled(ReactFlow)(({ theme }) => ({
     backgroundColor: theme.palette.background.default
@@ -23,7 +27,7 @@ export default function CustomFlow() {
 
     const { onNodesChange, onEdgesChange } = useFlowChanges();
     const { onConnect, onConnectStart, onConnectEnd } = useOnConnect();
-    const { onDrop, onDragOver } = useDragAndDrop();
+    const { onDrop, onDragOver, onNodeDrag, onNodeDragStop } = useDragAndDrop();
 
     const nodeTypes = useNodesTypes();
 
@@ -40,21 +44,26 @@ export default function CustomFlow() {
     return (
         <Box sx={{ width: '100%', height: '100%' }}>
             <ReactFlowStyled
-                elementsSelectable
-                nodeTypes={nodeTypes}
-                nodes={nodes}
                 edges={edges}
-                onNodesChange={onNodesChange}
-                onEdgesChange={onEdgesChange}
-                onConnect={onConnect}
+                elementsSelectable
                 fitView
-                onInit={setFlowInstance}
-                onDrop={onDrop}
-                onDragOver={onDragOver}
-                onConnectStart={onConnectStart}
+                nodes={nodes}
+                nodeTypes={nodeTypes}
+                onConnect={onConnect}
                 onConnectEnd={onConnectEnd}
+                onConnectStart={onConnectStart}
+                onDragOver={onDragOver}
+                onDrop={onDrop}
+                onEdgesChange={onEdgesChange}
+                onInit={setFlowInstance}
                 onNodeClick={onNodeClick}
+                onNodesChange={onNodesChange}
                 onPaneClick={onPaneClick}
+                onNodeDrag={onNodeDrag}
+                onNodeDragStop={onNodeDragStop}
+                defaultEdgeOptions={{
+                    type: 'smoothstep'
+                }}
             >
                 <MiniMapStyled
                     position="bottom-right"

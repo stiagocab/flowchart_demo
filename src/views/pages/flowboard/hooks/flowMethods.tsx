@@ -14,7 +14,7 @@ import {
 } from 'reactflow';
 
 import useFlowContext from '../hooks/useFlowContext';
-import { useNodeCreatorProps, useDragAndDropProps, useFlowChangesProps, useOnConnectProps } from '../types/flow';
+import { useNodeCreatorProps, useFlowChangesProps, useOnConnectProps } from '../types/flow';
 import { generatePosition, generateUUID } from './helpers';
 import NodesFlowEnum from '../types/NodesEnum';
 
@@ -73,48 +73,6 @@ export const useOnConnect = (): useOnConnectProps => {
     return { onConnect, onConnectStart, onConnectEnd };
 };
 
-export const useDragAndDrop = (): useDragAndDropProps => {
-    const { setNodes, flowWrapper, flowInstance } = useFlowContext();
-
-    const onDragOver = useCallback((event: React.DragEvent<HTMLDivElement>) => {
-        event.preventDefault();
-        event.dataTransfer.dropEffect = 'move';
-    }, []);
-
-    const onDrop = useCallback(
-        (event: React.DragEvent<HTMLDivElement>) => {
-            event.preventDefault();
-
-            const reactFlowBounds = flowWrapper?.current?.getBoundingClientRect();
-
-            const type = event.dataTransfer.getData('application/reactflow');
-
-            // check if the dropped element is valid
-            if (typeof type === 'undefined' || !type) {
-                return;
-            }
-
-            const position: XYPosition = flowInstance?.project({
-                x: event.clientX - (reactFlowBounds?.left ?? 50),
-                y: event.clientY - (reactFlowBounds?.top ?? 50)
-            }) ?? { x: 100, y: 100 };
-
-            const newNode = {
-                id: `${type}-${generateUUID()}`,
-                type,
-                position,
-                data: { label: `${type} node` }
-            };
-
-            setNodes((nds) => nds.concat(newNode));
-        },
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-        [flowInstance, setNodes]
-    );
-
-    return { onDragOver, onDrop };
-};
-
 export const useNodeCreator = (): useNodeCreatorProps => {
     const { setNodes, setEdges, selectedNode } = useFlowContext();
 
@@ -142,6 +100,7 @@ export const useNodeCreator = (): useNodeCreatorProps => {
             sourceHandle: 'source',
             target: newNodeId,
             targetHandle: 'target'
+            // type: 'smoothstep'
         };
 
         setEdges((eds) => [...eds, newEdge]);

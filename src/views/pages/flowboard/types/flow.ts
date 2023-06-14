@@ -1,5 +1,15 @@
 import React, { SetStateAction, Dispatch } from 'react';
-import { Edge, Node, OnConnect, OnConnectStartParams, OnEdgesChange, OnNodesChange, Project, ReactFlowInstance } from 'reactflow';
+import {
+    Edge,
+    Node,
+    OnConnect,
+    OnConnectStartParams,
+    OnEdgesChange,
+    OnNodesChange,
+    Project,
+    ReactFlowInstance,
+    ReactFlowState
+} from 'reactflow';
 import NodesFlowEnum from './NodesEnum';
 
 export type FlowContextProps = {
@@ -18,6 +28,15 @@ export type FlowContextProps = {
     openDrawerFromNode: (node?: Node | null) => void;
     closeDrawer: () => void;
     openDrawer: () => void;
+    store: {
+        getState: () => ReactFlowState;
+        setState: (
+            partial: ReactFlowState | Partial<ReactFlowState> | ((state: ReactFlowState) => ReactFlowState | Partial<ReactFlowState>),
+            replace?: boolean | undefined
+        ) => void;
+        subscribe: (listener: (state: ReactFlowState, prevState: ReactFlowState) => void) => () => void;
+        destroy: () => void;
+    };
 };
 
 export type useFlowChangesProps = {
@@ -34,6 +53,8 @@ export type useOnConnectProps = {
 export type useDragAndDropProps = {
     onDragOver: (event: React.DragEvent<HTMLDivElement>) => void;
     onDrop: (event: React.DragEvent<HTMLDivElement>) => void;
+    onNodeDrag: (event: any, node: Node) => void;
+    onNodeDragStop: (event: any, node: Node) => void;
 };
 
 export type useNodeCreatorProps = {

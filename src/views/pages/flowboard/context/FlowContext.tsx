@@ -1,13 +1,26 @@
 import React, { createContext, ReactNode, useMemo, useState, useRef, useCallback } from 'react';
 
-import { Node, ReactFlowInstance, useEdgesState, useNodesState, useReactFlow } from 'reactflow';
+import { Edge, Node, ReactFlowInstance, useEdgesState, useNodesState, useReactFlow, useStoreApi } from 'reactflow';
 import { FlowContextProps } from '../types/flow';
+import flowSettings from '../settings';
 
 // Create the FlowContext
 export const FlowContext = createContext<FlowContextProps | undefined>(undefined);
 
 const initialFlow: Node[] = [
-    { id: 'start', type: 'skeleton', position: { x: 100, y: 0 }, data: { parent: '', label: 'start', hideHandle: true } }
+    { id: '1', type: 'input', position: { x: 0, y: 0 }, data: { parent: '', label: 'start', hideHandle: true } },
+    { id: '2', type: 'default', position: { x: 100, y: 100 }, data: { parent: '', label: 'defa', hideHandle: true } }
+    // { id: 'start', type: 'skeleton', position: { x: 100, y: 0 }, data: { parent: '', label: 'start', hideHandle: true } }
+];
+
+const initialEdge: Edge[] = [
+    {
+        id: '1',
+        source: '1',
+        target: '2',
+        type: 'smoothstep',
+        animated: true
+    }
 ];
 
 export const FlowContextProvider: React.FC<{ children: ReactNode }> = ({ children }: { children: ReactNode }) => {
@@ -15,11 +28,12 @@ export const FlowContextProvider: React.FC<{ children: ReactNode }> = ({ childre
     const flowWrapper = useRef<HTMLDivElement>(null);
     const [selectedNodeId, setSelectedNodeId] = useState<string | number | null>(null);
     const [isDrawerOpen, setIsDrawerOpen] = useState<boolean>(false);
+    const store = useStoreApi();
 
     const connectingNodeId = useRef<any>();
 
     const [nodes, setNodes] = useNodesState(initialFlow);
-    const [edges, setEdges] = useEdgesState([]);
+    const [edges, setEdges] = useEdgesState(initialEdge);
 
     const { project } = useReactFlow();
 
@@ -57,7 +71,8 @@ export const FlowContextProvider: React.FC<{ children: ReactNode }> = ({ childre
             isDrawerOpen,
             openDrawerFromNode,
             closeDrawer,
-            openDrawer
+            openDrawer,
+            store
         };
         return values;
     }, [
@@ -75,7 +90,8 @@ export const FlowContextProvider: React.FC<{ children: ReactNode }> = ({ childre
         isDrawerOpen,
         openDrawerFromNode,
         closeDrawer,
-        openDrawer
+        openDrawer,
+        store
     ]);
 
     return <FlowContext.Provider value={contextValue}>{children}</FlowContext.Provider>;
