@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect } from 'react';
 
 import MainCard from 'ui-component/cards/MainCard';
 
@@ -10,11 +10,17 @@ import CustomFlow from './components/StyledFlow';
 import useFlowContext from './hooks/useFlowContext';
 import { ReactFlowProvider } from 'reactflow';
 import { FlowContextProvider } from './context/FlowContext';
+import { dispatch } from 'store';
+import { openDrawer as openMenu } from 'store/slices/menu';
 
 function FlowCustomizer() {
     // hooks
     const theme = useTheme();
     const { flowWrapper, isDrawerOpen, openDrawer, closeDrawer } = useFlowContext();
+
+    useEffect(() => {
+        dispatch(openMenu(false));
+    }, []);
 
     return (
         <MainCard content={false}>

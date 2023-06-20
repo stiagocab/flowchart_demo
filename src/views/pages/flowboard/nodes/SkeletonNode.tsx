@@ -1,5 +1,3 @@
-import { useEffect } from 'react';
-
 import { MouseEvent, useState } from 'react';
 
 import AddIcon from '@mui/icons-material/Add';
@@ -8,13 +6,12 @@ import { Button, IconButton, Menu, Paper, useTheme } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 import SettingsIcon from '@mui/icons-material/Settings';
 
-import { Position, useStoreApi } from 'reactflow';
+import { Position } from 'reactflow';
 
 import CustomHandle from '../components/CustomHandle';
 import { ICustomNodeProps } from '../types/nodes';
 
 function SkeletonNode({ data, selected }: ICustomNodeProps) {
-    const store = useStoreApi();
     const theme = useTheme();
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
 
@@ -38,7 +35,8 @@ function SkeletonNode({ data, selected }: ICustomNodeProps) {
                     paddingY: 1,
                     paddingX: 3,
                     border: '2px dotted',
-                    borderColor: selected ? theme.palette.primary.main : theme.palette.grey[400],
+                    borderColor: selected ? 'primary.main' : 'divider',
+                    boxShadow: selected ? 3 : 0,
                     width: data.origin === 'SIDE' ? 1 : null,
                     cursor: 'inherit',
                     '&:active': {

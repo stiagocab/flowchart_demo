@@ -37,7 +37,7 @@ export const useDragAndDrop = (): useDragAndDropProps => {
                 id: `${type}-${generateUUID()}`,
                 type,
                 position,
-                data: { label: `${type} node` }
+                data: { label: `${type}` }
             };
 
             setNodes((nds) => nds.concat(newNode));

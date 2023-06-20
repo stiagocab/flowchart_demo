@@ -10,7 +10,7 @@ import ReactFlow, { Controls, Background, BackgroundVariant, MiniMap, Node } fro
 // hooks
 import useFlowContext from '../hooks/useFlowContext';
 import useNodesTypes from '../hooks/useNodesTypes';
-import { useFlowChanges, useOnConnect } from '../hooks/flowMethods';
+import { useFlowChanges, useNodeCreator, useOnConnect } from '../hooks/flowMethods';
 import { useDragAndDrop } from '../hooks/useDragAndDrop';
 
 // styles
@@ -27,9 +27,10 @@ export default function CustomFlow() {
 
     const { onNodesChange, onEdgesChange } = useFlowChanges();
     const { onConnect, onConnectStart, onConnectEnd } = useOnConnect();
-    const { onDrop, onDragOver, onNodeDrag, onNodeDragStop } = useDragAndDrop();
+    const { onDrop, onDragOver } = useDragAndDrop();
+    const { onNodesDelete } = useNodeCreator();
 
-    const nodeTypes = useNodesTypes();
+    const { nodesTypes } = useNodesTypes();
 
     const onNodeClick = (e: React.MouseEvent, node: Node) => {
         setSelectedNodeId(node.id);
@@ -48,7 +49,7 @@ export default function CustomFlow() {
                 elementsSelectable
                 fitView
                 nodes={nodes}
-                nodeTypes={nodeTypes}
+                nodeTypes={nodesTypes}
                 onConnect={onConnect}
                 onConnectEnd={onConnectEnd}
                 onConnectStart={onConnectStart}
@@ -59,11 +60,15 @@ export default function CustomFlow() {
                 onNodeClick={onNodeClick}
                 onNodesChange={onNodesChange}
                 onPaneClick={onPaneClick}
-                onNodeDrag={onNodeDrag}
-                onNodeDragStop={onNodeDragStop}
+                // onNodeDrag={onNodeDrag}
+                // onNodeDragStop={onNodeDragStop}
                 defaultEdgeOptions={{
                     type: 'smoothstep'
                 }}
+                panOnScroll
+                selectionOnDrag
+                panOnDrag={[2, 4]}
+                onNodesDelete={onNodesDelete}
             >
                 <MiniMapStyled
                     position="bottom-right"

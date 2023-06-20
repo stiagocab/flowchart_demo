@@ -58,6 +58,7 @@ export type useDragAndDropProps = {
 };
 
 export type useNodeCreatorProps = {
-    createChildNode: (nodeType: NodesFlowEnum | string) => void;
+    createChildNode: (nodeType: NodesFlowEnum | string, newNodeWidth?: number) => void;
     replaceNode: (nodeType: NodesFlowEnum | string) => void;
+    onNodesDelete: (deleted: Node[]) => void;
 };

@@ -8,9 +8,12 @@ import {
     OnConnectStartParams,
     OnEdgesChange,
     OnNodesChange,
-    XYPosition,
+    getRectOfNodes,
     Node,
-    Edge
+    getOutgoers,
+    Edge,
+    getIncomers,
+    getConnectedEdges
 } from 'reactflow';
 
 import useFlowContext from '../hooks/useFlowContext';
@@ -74,22 +77,30 @@ export const useOnConnect = (): useOnConnectProps => {
 };
 
 export const useNodeCreator = (): useNodeCreatorProps => {
-    const { setNodes, setEdges, selectedNode } = useFlowContext();
+    const { setNodes, setEdges, selectedNode, nodes, edges } = useFlowContext();
 
-    const createChildNode = (nodeType: NodesFlowEnum | string) => {
+    const createChildNode = (nodeType: NodesFlowEnum | string, newNodeWidth?: number) => {
         const newUUID = generateUUID();
 
         const newNodeId = `node-${nodeType}-${newUUID}`;
 
         const newNode: Node = {
             id: newNodeId,
-            position: generatePosition(selectedNode!),
+            position: generatePosition(selectedNode!, newNodeWidth),
             type: nodeType,
             data: {
                 isFinal: false,
                 parent: selectedNode?.id,
                 label: `${nodeType.toUpperCase()}`
             }
+        };
+
+        const nodeRect = getRectOfNodes([selectedNode!, newNode]);
+        const parenNodeChildren = getOutgoers(selectedNode!, nodes, edges)?.length;
+
+        newNode.position = {
+            x: nodeRect.x + parenNodeChildren * 80,
+            y: newNode.position.y
         };
 
         setNodes((nds) => [...nds, newNode]);
@@ -99,7 +110,8 @@ export const useNodeCreator = (): useNodeCreatorProps => {
             source: selectedNode?.id!,
             sourceHandle: 'source',
             target: newNodeId,
-            targetHandle: 'target'
+            targetHandle: 'target',
+            animated: nodeType === NodesFlowEnum.skeleton
             // type: 'smoothstep'
         };
 
@@ -125,7 +137,37 @@ export const useNodeCreator = (): useNodeCreatorProps => {
                 return { ...itemNode };
             })
         ]);
+
+        setEdges((eds) => [
+            ...eds.map((item) => {
+                if (item.target === updateData.id) {
+                    return { ...item, animated: false };
+                }
+                return item;
+            })
+        ]);
     };
 
-    return { createChildNode, replaceNode };
+    const onNodesDelete = useCallback(
+        (deleted: Node[]) => {
+            setEdges(
+                deleted.reduce((acc, node: Node) => {
+                    const incomers = getIncomers(node, nodes, edges);
+                    const outgoers = getOutgoers(node, nodes, edges);
+                    const connectedEdges = getConnectedEdges([node], edges);
+
+                    const remainingEdges = acc.filter((edge: Edge) => !connectedEdges.includes(edge));
+
+                    const createdEdges = incomers.flatMap(({ id: source }) =>
+                        outgoers.map(({ id: target }) => ({ id: `${source}->${target}`, source, target }))
+                    );
+
+                    return [...remainingEdges, ...createdEdges];
+                }, edges)
+            );
+        },
+        [nodes, edges]
+    );
+
+    return { createChildNode, replaceNode, onNodesDelete };
 };
