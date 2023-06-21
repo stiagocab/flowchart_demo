@@ -5,7 +5,7 @@ import { Box, useTheme } from '@mui/material';
 import { styled } from '@mui/system';
 
 // React flow
-import ReactFlow, { Controls, Background, BackgroundVariant, MiniMap, Node } from 'reactflow';
+import ReactFlow, { Controls, Background, BackgroundVariant, MiniMap, Node, ConnectionMode } from 'reactflow';
 
 // hooks
 import useFlowContext from '../hooks/useFlowContext';
@@ -16,6 +16,7 @@ import { useDragAndDrop } from '../hooks/useDragAndDrop';
 // styles
 import 'reactflow/dist/style.css';
 import '../styles.css';
+import ConnectionLine from './ConnectionLine';
 
 const ReactFlowStyled = styled(ReactFlow)(({ theme }) => ({
     backgroundColor: theme.palette.background.default
@@ -27,7 +28,7 @@ export default function CustomFlow() {
 
     const { onNodesChange, onEdgesChange } = useFlowChanges();
     const { onConnect, onConnectStart, onConnectEnd } = useOnConnect();
-    const { onDrop, onDragOver } = useDragAndDrop();
+    const { onDrop, onDragOver, onNodeDrag, onNodeDragStop } = useDragAndDrop();
     const { onNodesDelete } = useNodeCreator();
 
     const { nodesTypes } = useNodesTypes();
@@ -60,8 +61,8 @@ export default function CustomFlow() {
                 onNodeClick={onNodeClick}
                 onNodesChange={onNodesChange}
                 onPaneClick={onPaneClick}
-                // onNodeDrag={onNodeDrag}
-                // onNodeDragStop={onNodeDragStop}
+                onNodeDrag={onNodeDrag}
+                onNodeDragStop={onNodeDragStop}
                 defaultEdgeOptions={{
                     type: 'smoothstep'
                 }}
@@ -69,6 +70,8 @@ export default function CustomFlow() {
                 selectionOnDrag
                 panOnDrag={[2, 4]}
                 onNodesDelete={onNodesDelete}
+                connectionMode={ConnectionMode.Strict}
+                connectionLineComponent={ConnectionLine}
             >
                 <MiniMapStyled
                     position="bottom-right"

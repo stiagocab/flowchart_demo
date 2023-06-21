@@ -2,7 +2,6 @@ import React, { createContext, ReactNode, useMemo, useState, useRef, useCallback
 
 import { Edge, Node, ReactFlowInstance, useEdgesState, useNodesState, useReactFlow, useStoreApi } from 'reactflow';
 import { FlowContextProps } from '../types/flow';
-import flowSettings from '../settings';
 import NodesFlowEnum from '../types/NodesEnum';
 
 // Create the FlowContext
@@ -29,10 +28,13 @@ const initialEdge: Edge[] = [
 
 export const FlowContextProvider: React.FC<{ children: ReactNode }> = ({ children }: { children: ReactNode }) => {
     const [flowInstance, setFlowInstance] = useState<ReactFlowInstance | null>(null);
-    const flowWrapper = useRef<HTMLDivElement>(null);
     const [selectedNodeId, setSelectedNodeId] = useState<string | number | null>(null);
     const [isDrawerOpen, setIsDrawerOpen] = useState<boolean>(false);
     const store = useStoreApi();
+
+    // hooks - refs
+    const draggedNodeRef = useRef<Node | null>(null);
+    const flowWrapper = useRef<HTMLDivElement>(null);
 
     const connectingNodeId = useRef<any>();
 
@@ -58,6 +60,10 @@ export const FlowContextProvider: React.FC<{ children: ReactNode }> = ({ childre
 
     const closeDrawer = useCallback(() => setIsDrawerOpen(false), []);
 
+    const onNodeDragStart = (evt: any, node: Node) => {
+        draggedNodeRef.current = node;
+    };
+
     // functions and data to return
     const contextValue: FlowContextProps = useMemo<FlowContextProps>(() => {
         const values: FlowContextProps = {
@@ -76,7 +82,9 @@ export const FlowContextProvider: React.FC<{ children: ReactNode }> = ({ childre
             openDrawerFromNode,
             closeDrawer,
             openDrawer,
-            store
+            store,
+            onNodeDragStart,
+            draggedNodeRef
         };
         return values;
     }, [

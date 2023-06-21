@@ -1,4 +1,4 @@
-import { useCallback } from 'react';
+import { useState, useCallback } from 'react';
 
 import { XYPosition, Node } from 'reactflow';
 
@@ -6,9 +6,11 @@ import useFlowContext from '../hooks/useFlowContext';
 import { useDragAndDropProps } from '../types/flow';
 import { generateUUID } from './helpers';
 import flowSettings from '../settings';
+import NodesFlowEnum from '../types/NodesEnum';
 
 export const useDragAndDrop = (): useDragAndDropProps => {
-    const { setNodes, flowWrapper, flowInstance, store, setEdges } = useFlowContext();
+    const { setNodes, flowWrapper, flowInstance, setEdges, nodes, draggedNodeRef } = useFlowContext();
+    const [targetDragNode, setTargetNode] = useState<Node | null>(null);
 
     const onDragOver = useCallback((event: React.DragEvent<HTMLDivElement>) => {
         event.preventDefault();
@@ -46,84 +48,98 @@ export const useDragAndDrop = (): useDragAndDropProps => {
         [flowInstance, setNodes]
     );
 
-    const getClosestEdge = useCallback(
-        (node: Node) => {
-            const { nodeInternals } = store.getState();
-            const storeNodes = Array.from(nodeInternals.values());
+    // const getClosestEdge = useCallback(
+    //     (node: Node) => {
+    //         const { nodeInternals } = store.getState();
+    //         const storeNodes = Array.from(nodeInternals.values());
 
-            const closestNode = storeNodes.reduce(
-                (res: { distance: number; node: Node | null }, n) => {
-                    if (n && n.positionAbsolute && node.positionAbsolute && n.id !== node.id) {
-                        const dx = n.positionAbsolute.x - node.positionAbsolute.x;
-                        const dy = n.positionAbsolute.y - node.positionAbsolute.y;
-                        const d = Math.sqrt(dx * dx + dy * dy);
+    //         const closestNode = storeNodes.reduce(
+    //             (res: { distance: number; node: Node | null }, n) => {
+    //                 if (n && n.positionAbsolute && node.positionAbsolute && n.id !== node.id) {
+    //                     const dx = n.positionAbsolute.x - node.positionAbsolute.x;
+    //                     const dy = n.positionAbsolute.y - node.positionAbsolute.y;
+    //                     const d = Math.sqrt(dx * dx + dy * dy);
 
-                        if (d < res.distance && d < flowSettings.minDistance) {
-                            res.distance = d;
-                            res.node = n;
-                        }
-                    }
+    //                     if (d < res.distance && d < flowSettings.minDistance) {
+    //                         res.distance = d;
+    //                         res.node = n;
+    //                     }
+    //                 }
 
-                    return res;
-                },
-                {
-                    distance: Number.MAX_VALUE,
-                    node: null
-                }
-            );
+    //                 return res;
+    //             },
+    //             {
+    //                 distance: Number.MAX_VALUE,
+    //                 node: null
+    //             }
+    //         );
 
-            if (!closestNode.node) {
-                return null;
-            }
+    //         if (!closestNode.node) {
+    //             return null;
+    //         }
 
-            const closeNodeIsSource = closestNode.node.positionAbsolute?.x! < node.positionAbsolute?.x!;
+    //         const closeNodeIsSource = closestNode.node.positionAbsolute?.x! < node.positionAbsolute?.x!;
 
-            return {
-                id: `${node.id}-${closestNode.node.id}`,
-                source: closeNodeIsSource ? closestNode.node.id : node.id,
-                target: closeNodeIsSource ? node.id : closestNode.node.id
-            };
-        },
-        [store]
-    );
+    //         return {
+    //             id: `${node.id}-${closestNode.node.id}`,
+    //             source: closeNodeIsSource ? closestNode.node.id : node.id,
+    //             target: closeNodeIsSource ? node.id : closestNode.node.id
+    //         };
+    //     },
+    //     [store]
+    // );
 
-    const onNodeDrag = useCallback(
-        (event: any, node: Node) => {
-            const closeEdge: { [key: string]: any } | null = getClosestEdge(node);
+    const onNodeDrag = (event: any, node: Node) => {
+        // calculate the center point of the node from position and dimensions
+        const centerX = node.position.x + node?.width! / 2;
+        const centerY = node.position.y + node?.height! / 2;
 
-            setEdges((es) => {
-                const nextEdges = es.filter((e) => e.className !== 'temp');
+        // find a node where the center point is inside
+        const targetNode = nodes.find(
+            (n) =>
+                n.type === NodesFlowEnum.skeleton &&
+                centerX > n.position.x &&
+                centerX < n.position.x + n.width! &&
+                centerY > n.position.y &&
+                centerY < n.position.y + n.height! &&
+                n.id !== node.id // this is needed, otherwise we would always find the dragged node
+        );
 
-                if (closeEdge && !nextEdges.find((ne) => ne.source === closeEdge.source && ne.target === closeEdge.target)) {
-                    // console.log('CLOSE', closeEdge);
-                    closeEdge.className = 'temp';
-                    // nextEdges.push(closeEdge);
-                }
-
-                return nextEdges;
-            });
-        },
-        [getClosestEdge]
-    );
+        setTargetNode(targetNode ?? null);
+    };
 
     const onNodeDragStop = useCallback(
         (_: any, node: Node) => {
-            const closeEdge = getClosestEdge(node);
+            setNodes((prevNodes: Node[]) => {
+                let nextNodes = prevNodes.map((n) => {
+                    if (n.id === targetDragNode?.id) {
+                        return { ...n, type: node.type };
+                    }
+                    return n;
+                });
 
-            setEdges((es) => {
-                const nextEdges = es.filter((e) => e.className !== 'temp');
-
-                const existEdge = es.every((e) => e.id !== closeEdge?.id);
-
-                if (closeEdge && existEdge) {
-                    nextEdges.push(closeEdge);
+                if (targetDragNode) {
+                    nextNodes = nextNodes.filter((n) => n.id !== node.id);
                 }
+                return nextNodes;
+            });
 
+            setEdges((prevEdges) => {
+                const nextEdges = prevEdges.map((e) => {
+                    if (e.animated && e.target === targetDragNode?.id) {
+                        return { ...e, animated: false };
+                    }
+
+                    return e;
+                });
                 return nextEdges;
             });
+
+            setTargetNode(null);
+            draggedNodeRef.current = null;
         },
         // eslint-disable-next-line react-hooks/exhaustive-deps
-        [getClosestEdge]
+        [targetDragNode]
     );
 
     return { onDragOver, onDrop, onNodeDrag, onNodeDragStop };

@@ -28,6 +28,8 @@ export type FlowContextProps = {
     openDrawerFromNode: (node?: Node | null) => void;
     closeDrawer: () => void;
     openDrawer: () => void;
+    onNodeDragStart: (event: any, node: Node) => void;
+    draggedNodeRef: React.MutableRefObject<Node | null>;
     store: {
         getState: () => ReactFlowState;
         setState: (
