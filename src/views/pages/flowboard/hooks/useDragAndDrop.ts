@@ -5,7 +5,6 @@ import { XYPosition, Node } from 'reactflow';
 import useFlowContext from '../hooks/useFlowContext';
 import { useDragAndDropProps } from '../types/flow';
 import { generateUUID } from './helpers';
-import flowSettings from '../settings';
 import NodesFlowEnum from '../types/NodesEnum';
 
 export const useDragAndDrop = (): useDragAndDropProps => {

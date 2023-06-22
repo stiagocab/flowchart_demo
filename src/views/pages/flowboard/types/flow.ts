@@ -6,6 +6,7 @@ import {
     OnConnectStartParams,
     OnEdgesChange,
     OnNodesChange,
+    OnSelectionChangeParams,
     Project,
     ReactFlowInstance,
     ReactFlowState
@@ -57,6 +58,14 @@ export type useDragAndDropProps = {
     onDrop: (event: React.DragEvent<HTMLDivElement>) => void;
     onNodeDrag: (event: any, node: Node) => void;
     onNodeDragStop: (event: any, node: Node) => void;
+};
+
+export type useSelectionProps = {
+    // onSelect: (params: OnSelectionChangeParams) => void;
+    onSelectRightClick: (event: React.MouseEvent<Element, MouseEvent>, nodes: Node[]) => void;
+    RenderContextSelectionMenu: JSX.Element;
+    RenderContextNodeMenu: JSX.Element;
+    onNodeRightClick: (event: React.MouseEvent<Element, MouseEvent>, node: Node) => void;
 };
 
 export type useNodeCreatorProps = {

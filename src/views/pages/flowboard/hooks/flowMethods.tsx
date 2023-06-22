@@ -66,7 +66,7 @@ export const useOnConnect = (): useOnConnectProps => {
                     data: {}
                 };
                 setNodes((nds) => nds.concat(newNode));
-                setEdges((eds) => eds.concat({ id: nodeId, source: connectingNodeId.current, target: nodeId }));
+                setEdges((eds) => eds.concat({ id: nodeId, source: connectingNodeId.current, target: nodeId, animated: true }));
             }
         },
         // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -166,6 +166,7 @@ export const useNodeCreator = (): useNodeCreatorProps => {
                 }, edges)
             );
         },
+        // eslint-disable-next-line react-hooks/exhaustive-deps
         [nodes, edges]
     );
 

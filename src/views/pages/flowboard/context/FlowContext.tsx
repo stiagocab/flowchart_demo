@@ -10,8 +10,28 @@ export const FlowContext = createContext<FlowContextProps | undefined>(undefined
 const initialFlow: Node[] = [
     { id: '1', type: NodesFlowEnum.dot, position: { x: 0, y: 0 }, data: { parent: '', label: 'AA', hideHandle: false } },
     { id: '2', type: NodesFlowEnum.skeleton, position: { x: -10, y: 100 }, data: { parent: '', label: 'A1', hideHandle: false } }
-    // { id: '3', type: NodesFlowEnum.dot, position: { x: 120, y: 20 }, data: { parent: '', label: 'A2', hideHandle: false } },
-    // { id: '4', type: NodesFlowEnum.dot, position: { x: 180, y: 30 }, data: { parent: '', label: 'A3', hideHandle: false } },
+    // {
+    //     id: 'group-a',
+    //     type: 'group',
+    //     data: { label: null },
+    //     position: { x: 0, y: 0 }
+    // },
+    // {
+    //     id: '3',
+    //     type: NodesFlowEnum.dot,
+    //     parentNode: 'group-a',
+    //     expandParent: true,
+    //     position: { x: 120, y: 20 },
+    //     data: { parent: '', label: 'A2', hideHandle: false }
+    // },
+    // {
+    //     id: '4',
+    //     type: NodesFlowEnum.dot,
+    //     parentNode: 'group-a',
+    //     expandParent: true,
+    //     position: { x: 180, y: 30 },
+    //     data: { parent: '', label: 'A3', hideHandle: false }
+    // }
     // { id: '5', type: NodesFlowEnum.dot, position: { x: 240, y: 40 }, data: { parent: '', label: 'A4', hideHandle: false } }
     // { id: 'start', type: 'skeleton', position: { x: 100, y: 0 }, data: { parent: '', label: 'start', hideHandle: true } }
 ];

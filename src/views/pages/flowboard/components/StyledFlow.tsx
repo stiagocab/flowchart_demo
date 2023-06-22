@@ -7,16 +7,19 @@ import { styled } from '@mui/system';
 // React flow
 import ReactFlow, { Controls, Background, BackgroundVariant, MiniMap, Node, ConnectionMode } from 'reactflow';
 
+// components
+import ConnectionLine from './ConnectionLine';
+
 // hooks
 import useFlowContext from '../hooks/useFlowContext';
 import useNodesTypes from '../hooks/useNodesTypes';
 import { useFlowChanges, useNodeCreator, useOnConnect } from '../hooks/flowMethods';
 import { useDragAndDrop } from '../hooks/useDragAndDrop';
+import useSelection from '../hooks/useSelection';
 
 // styles
 import 'reactflow/dist/style.css';
 import '../styles.css';
-import ConnectionLine from './ConnectionLine';
 
 const ReactFlowStyled = styled(ReactFlow)(({ theme }) => ({
     backgroundColor: theme.palette.background.default
@@ -30,6 +33,7 @@ export default function CustomFlow() {
     const { onConnect, onConnectStart, onConnectEnd } = useOnConnect();
     const { onDrop, onDragOver, onNodeDrag, onNodeDragStop } = useDragAndDrop();
     const { onNodesDelete } = useNodeCreator();
+    const { onSelectRightClick, RenderContextSelectionMenu, onNodeRightClick, RenderContextNodeMenu } = useSelection();
 
     const { nodesTypes } = useNodesTypes();
 
@@ -46,6 +50,9 @@ export default function CustomFlow() {
     return (
         <Box sx={{ width: '100%', height: '100%' }}>
             <ReactFlowStyled
+                connectionLineComponent={ConnectionLine}
+                connectionMode={ConnectionMode.Strict}
+                defaultEdgeOptions={{ type: 'smoothstep' }}
                 edges={edges}
                 elementsSelectable
                 fitView
@@ -59,19 +66,17 @@ export default function CustomFlow() {
                 onEdgesChange={onEdgesChange}
                 onInit={setFlowInstance}
                 onNodeClick={onNodeClick}
-                onNodesChange={onNodesChange}
-                onPaneClick={onPaneClick}
                 onNodeDrag={onNodeDrag}
+                onNodeDragStart={onNodeClick}
                 onNodeDragStop={onNodeDragStop}
-                defaultEdgeOptions={{
-                    type: 'smoothstep'
-                }}
+                onNodesChange={onNodesChange}
+                onNodesDelete={onNodesDelete}
+                onPaneClick={onPaneClick}
+                onSelectionContextMenu={onSelectRightClick}
+                panOnDrag={[2, 4]}
                 panOnScroll
                 selectionOnDrag
-                panOnDrag={[2, 4]}
-                onNodesDelete={onNodesDelete}
-                connectionMode={ConnectionMode.Strict}
-                connectionLineComponent={ConnectionLine}
+                onNodeContextMenu={onNodeRightClick}
             >
                 <MiniMapStyled
                     position="bottom-right"
@@ -79,6 +84,8 @@ export default function CustomFlow() {
                 />
                 <Controls />
                 <Background variant={BackgroundVariant.Dots} gap={12} size={1} />
+                {RenderContextSelectionMenu}
+                {RenderContextNodeMenu}
             </ReactFlowStyled>
         </Box>
     );

@@ -7,9 +7,6 @@ export function generatePosition(parentNode: Node, newNodeWidth?: number): XYPos
 
     newNodeWidth = newNodeWidth ?? 10;
 
-    console.log('parentNode', parentNode);
-    console.log('newNodeWidth', newNodeWidth);
-
     const parentX = parentNode.position.x;
 
     const centerPositionX = parentX + newNodeWidth / 2;
