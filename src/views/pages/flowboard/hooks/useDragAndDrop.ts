@@ -1,15 +1,16 @@
 import { useState, useCallback } from 'react';
 
-import { XYPosition, Node } from 'reactflow';
+import { XYPosition, Node, useReactFlow } from 'reactflow';
 
 import useFlowContext from '../hooks/useFlowContext';
 import { useDragAndDropProps } from '../types/flow';
-import { generateUUID } from './helpers';
+import { searchTargetNode, generateUUID, getBelowNode } from './helpers';
 import NodesFlowEnum from '../types/NodesEnum';
 
 export const useDragAndDrop = (): useDragAndDropProps => {
     const { setNodes, flowWrapper, flowInstance, setEdges, nodes, draggedNodeRef } = useFlowContext();
     const [targetDragNode, setTargetNode] = useState<Node | null>(null);
+    const { getIntersectingNodes } = useReactFlow();
 
     const onDragOver = useCallback((event: React.DragEvent<HTMLDivElement>) => {
         event.preventDefault();
@@ -34,17 +35,45 @@ export const useDragAndDrop = (): useDragAndDropProps => {
                 y: event.clientY - (reactFlowBounds?.top ?? 50)
             }) ?? { x: 100, y: 100 };
 
-            const newNode = {
+            const newNode: Node = {
                 id: `${type}-${generateUUID()}`,
                 type,
                 position,
+                positionAbsolute: position,
                 data: { label: `${type}` }
             };
 
-            setNodes((nds) => nds.concat(newNode));
+            console.log('newNode', newNode);
+
+            const newTarget = searchTargetNode({ node: newNode, nodes });
+            setTargetNode(newTarget);
+
+            // console.log('newTarget', newTarget);
+
+            const belowNode = getBelowNode(nodes, newNode.position);
+
+            console.log('belowNode', belowNode);
+
+            if (belowNode && belowNode.type === NodesFlowEnum.skeleton) {
+                // REPLACE
+
+                setNodes((prevNodes: Node[]) => {
+                    let nextNodes = prevNodes.map((n) => {
+                        if (n.id === belowNode?.id) {
+                            return { ...n, type: newNode.type };
+                        }
+                        return n;
+                    });
+
+                    return nextNodes;
+                });
+            } else {
+                // NEW NODES
+                setNodes((nds) => nds.concat(newNode));
+            }
         },
         // eslint-disable-next-line react-hooks/exhaustive-deps
-        [flowInstance, setNodes]
+        [flowInstance, setNodes, nodes]
     );
 
     // const getClosestEdge = useCallback(
@@ -88,23 +117,12 @@ export const useDragAndDrop = (): useDragAndDropProps => {
     //     [store]
     // );
 
-    const onNodeDrag = (event: any, node: Node) => {
-        // calculate the center point of the node from position and dimensions
-        const centerX = node.position.x + node?.width! / 2;
-        const centerY = node.position.y + node?.height! / 2;
+    const onNodeDrag = (_: any, node: Node) => {
+        const newTarget = searchTargetNode({ node, nodes });
+        setTargetNode(newTarget);
 
-        // find a node where the center point is inside
-        const targetNode = nodes.find(
-            (n) =>
-                n.type === NodesFlowEnum.skeleton &&
-                centerX > n.position.x &&
-                centerX < n.position.x + n.width! &&
-                centerY > n.position.y &&
-                centerY < n.position.y + n.height! &&
-                n.id !== node.id // this is needed, otherwise we would always find the dragged node
-        );
-
-        setTargetNode(targetNode ?? null);
+        const intersections = getIntersectingNodes(node).map((n) => n.id);
+        console.log('intersections', intersections);
     };
 
     const onNodeDragStop = useCallback(

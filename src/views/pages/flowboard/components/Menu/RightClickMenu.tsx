@@ -1,4 +1,4 @@
-import { Menu, MenuItem, ListItemIcon, ListItemText, Typography } from '@mui/material';
+import { Menu, IconButton, Paper } from '@mui/material';
 
 import { ContextMenuOptionType } from '../../types/menu';
 
@@ -21,17 +21,15 @@ const RightClickMenu = ({ anchorEl, open, handleClose, options, id }: RightClick
                 'aria-labelledby': 'basic-button'
             }}
         >
-            {options.map((item, index) => {
-                return (
-                    <MenuItem key={`${item.label ?? ''}-${index}`} title={item.label ?? ''} onClick={item.action}>
-                        <ListItemIcon>{item.icon}</ListItemIcon>
-                        <ListItemText sx={{ textTransform: 'capitalize' }}>{item.label}</ListItemText>
-                        <Typography variant="caption" color="text.secondary">
-                            {item.shortcut ?? ''}
-                        </Typography>
-                    </MenuItem>
-                );
-            })}
+            <Paper sx={{ paddingX: 1 }}>
+                {options.map((item, index) => {
+                    return (
+                        <IconButton key={`${item.label ?? ''}-${index}`} title={item.label ?? ''} onClick={item.action}>
+                            {item.icon}
+                        </IconButton>
+                    );
+                })}
+            </Paper>
         </Menu>
     );
 };
