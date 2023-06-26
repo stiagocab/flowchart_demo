@@ -1,19 +1,30 @@
 import React, { useCallback, useMemo, useState } from 'react';
 import { useSelectionProps } from '../types/flow';
-import { Node } from 'reactflow';
+import { Node, useOnSelectionChange } from 'reactflow';
 
 import DeleteIcon from '@mui/icons-material/Delete';
 import AlignHorizontalCenterIcon from '@mui/icons-material/AlignHorizontalCenter';
 import AlignVerticalCenterIcon from '@mui/icons-material/AlignVerticalCenter';
-import useFlowContext from './useFlowContext';
 import RightClickMenu from '../components/Menu/RightClickMenu';
 
+import useFlowContext from './useFlowContext';
+
+// functions
+import { centerHorizontal, centerVertical, createGroupPosition, generateUUID } from './helpers';
+
 export default function useSelection(): useSelectionProps {
-    const { setNodes } = useFlowContext();
+    const { setNodes, store } = useFlowContext();
     const [selectedNodes, setSelectedNodes] = useState<Node[] | null>(null);
 
     const [anchorRightMenu, setAnchorRightMenu] = React.useState<null | HTMLElement>(null);
     const [anchorNodeMenu, setAnchorNodeMenu] = React.useState<null | HTMLElement>(null);
+
+    useOnSelectionChange({
+        onChange: ({ nodes, edges }) => {
+            console.log('changed selection', nodes, edges);
+            setSelectedNodes(nodes);
+        }
+    });
 
     const onSelectRightClick = (event: React.MouseEvent<Element, MouseEvent>, nodes: Node[]) => {
         event.preventDefault();
@@ -31,10 +42,12 @@ export default function useSelection(): useSelectionProps {
         setSelectedNodes([node]);
     };
 
-    const handleClose = () => {
+    const handleClose = useCallback(() => {
         setAnchorRightMenu(null);
         setSelectedNodes(null);
-    };
+
+        store.getState().unselectNodesAndEdges();
+    }, [store]);
 
     const onCenterVerticalClick = useCallback(
         () => setNodes((prevNodes) => centerVertical(prevNodes, selectedNodes!)),
@@ -53,6 +66,60 @@ export default function useSelection(): useSelectionProps {
         });
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
+
+    const groupSelectedNodes = useCallback(() => {
+        if (selectedNodes && selectedNodes.length > 1) {
+            const newGroupId = `group-${generateUUID()}`;
+
+            const groupCordinates = createGroupPosition(selectedNodes);
+
+            const finalCoords = groupCordinates.position;
+
+            // flowInstance?.project({
+            // x: groupCordinates.position.x,
+            // y: groupCordinates.position.y
+            // }) ??
+
+            const newGroupNode: Node = {
+                id: newGroupId,
+                type: 'group',
+                position: {
+                    x: finalCoords?.x,
+                    y: finalCoords?.y
+                },
+                style: {
+                    width: groupCordinates.width,
+                    height: groupCordinates.height
+                },
+                data: {}
+            };
+
+            setNodes((prevNodes) => {
+                return [
+                    newGroupNode,
+                    ...prevNodes.map((item) => {
+                        const isSelected = selectedNodes.some((itemA) => itemA.id === item.id);
+
+                        if (isSelected) {
+                            const updatedNode: Node = {
+                                ...item,
+                                positionAbsolute: item.position,
+                                parentNode: newGroupId,
+                                expandParent: false,
+                                extent: 'parent'
+                            };
+
+                            return updatedNode;
+                            // return { ...item,  };
+                        }
+
+                        return item;
+                    })
+                ];
+            });
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [selectedNodes]);
 
     const RenderContextSelectionMenu: JSX.Element = useMemo(() => {
         return (
@@ -82,7 +149,7 @@ export default function useSelection(): useSelectionProps {
                 ]}
             />
         );
-    }, [anchorRightMenu, onCenterHorizontalClick, onCenterVerticalClick, selectedNodes, onDeleteSelection]);
+    }, [handleClose, anchorRightMenu, onCenterVerticalClick, onCenterHorizontalClick, onDeleteSelection, selectedNodes]);
 
     const RenderContextNodeMenu: JSX.Element = useMemo(() => {
         return (
@@ -112,87 +179,3 @@ export default function useSelection(): useSelectionProps {
         onNodeRightClick
     };
 }
-
-function centerVertical(nodes: Node[], selectedNodes: Node[]): Node[] {
-    // calcular el centro de los seleccionado
-
-    // let maxHeight = 1;
-
-    let startYPosition = 0;
-    let endYPosition = 0;
-
-    selectedNodes.forEach((itemA: Node) => {
-        // if (itemA.height! > maxHeight) {
-        //     maxHeight = itemA.height!;
-        // }
-
-        const startPosition = itemA.position.y;
-        const endPosition = itemA.position.y + itemA.height!;
-
-        if (startPosition < startYPosition) {
-            startYPosition = startPosition;
-        }
-
-        if (endPosition > endYPosition) {
-            endYPosition = endPosition;
-        }
-    });
-
-    const centerY = (startYPosition + endYPosition) / 2;
-
-    return nodes.map((node) => {
-        const isSelected = selectedNodes.some((itemNode) => itemNode.id === node.id);
-
-        if (isSelected) {
-            return { ...yCenterNode(node, centerY) };
-        }
-
-        return node;
-    });
-}
-
-const yCenterNode = (node: Node, centerY: number): Node => {
-    const yCenter = centerY - node.height! / 2;
-    return { ...node, position: { ...node.position, y: yCenter } };
-};
-
-function centerHorizontal(nodes: Node[], selectedNodes: Node[]): Node[] {
-    // Calcular el centro horizontal de los nodos seleccionados
-    // let maxWidth = 1;
-    let startXPosition = 0;
-    let endXPosition = 1;
-
-    selectedNodes.forEach((itemA) => {
-        // if (itemA.width && itemA.width > maxWidth) {
-        //     maxWidth = itemA.width;
-        // }
-
-        const startPosition = itemA.position.x;
-        const endPosition = itemA.position.x + itemA.width!;
-
-        if (startPosition < startXPosition) {
-            startXPosition = startPosition;
-        }
-
-        if (endPosition > endXPosition) {
-            endXPosition = endPosition;
-        }
-    });
-
-    const centerX = (startXPosition + endXPosition) / 2;
-
-    return nodes.map((node) => {
-        const isSelected = selectedNodes.some((itemNode) => itemNode.id === node.id);
-
-        if (isSelected) {
-            return { ...xCenterNode(node, centerX) };
-        }
-
-        return node;
-    });
-}
-
-const xCenterNode = (node: Node, centerX: number): Node => {
-    const xCenter = centerX - node.width! / 2;
-    return { ...node, position: { ...node.position, x: xCenter } };
-};

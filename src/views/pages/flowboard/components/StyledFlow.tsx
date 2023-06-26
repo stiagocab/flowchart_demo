@@ -66,6 +66,7 @@ export default function CustomFlow() {
                 onEdgesChange={onEdgesChange}
                 onInit={setFlowInstance}
                 onNodeClick={onNodeClick}
+                onNodeContextMenu={onNodeRightClick}
                 onNodeDrag={onNodeDrag}
                 onNodeDragStart={onNodeClick}
                 onNodeDragStop={onNodeDragStop}
@@ -76,7 +77,6 @@ export default function CustomFlow() {
                 panOnDrag={[2, 4]}
                 panOnScroll
                 selectionOnDrag
-                onNodeContextMenu={onNodeRightClick}
             >
                 <MiniMapStyled
                     position="bottom-right"

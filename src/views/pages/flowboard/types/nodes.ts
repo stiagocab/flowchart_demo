@@ -14,7 +14,7 @@ export interface INodesData extends Partial<INodeConditions> {
     hideHandle: boolean;
     origin: 'SIDE' | 'BOARD';
     label?: string;
-    // group?: string;
+    groupId?: string | undefined;
 }
 
 export interface ICustomNodeProps extends Partial<Node> {
