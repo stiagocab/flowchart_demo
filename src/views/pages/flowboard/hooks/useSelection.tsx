@@ -10,7 +10,7 @@ import RightClickMenu from '../components/Menu/RightClickMenu';
 import useFlowContext from './useFlowContext';
 
 // functions
-import { centerHorizontal, centerVertical, createGroupPosition, generateUUID } from './helpers';
+import { centerHorizontal, centerVertical } from './helpers';
 
 export default function useSelection(): useSelectionProps {
     const { setNodes, store } = useFlowContext();
@@ -21,7 +21,6 @@ export default function useSelection(): useSelectionProps {
 
     useOnSelectionChange({
         onChange: ({ nodes, edges }) => {
-            console.log('changed selection', nodes, edges);
             setSelectedNodes(nodes);
         }
     });
@@ -66,60 +65,6 @@ export default function useSelection(): useSelectionProps {
         });
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
-
-    const groupSelectedNodes = useCallback(() => {
-        if (selectedNodes && selectedNodes.length > 1) {
-            const newGroupId = `group-${generateUUID()}`;
-
-            const groupCordinates = createGroupPosition(selectedNodes);
-
-            const finalCoords = groupCordinates.position;
-
-            // flowInstance?.project({
-            // x: groupCordinates.position.x,
-            // y: groupCordinates.position.y
-            // }) ??
-
-            const newGroupNode: Node = {
-                id: newGroupId,
-                type: 'group',
-                position: {
-                    x: finalCoords?.x,
-                    y: finalCoords?.y
-                },
-                style: {
-                    width: groupCordinates.width,
-                    height: groupCordinates.height
-                },
-                data: {}
-            };
-
-            setNodes((prevNodes) => {
-                return [
-                    newGroupNode,
-                    ...prevNodes.map((item) => {
-                        const isSelected = selectedNodes.some((itemA) => itemA.id === item.id);
-
-                        if (isSelected) {
-                            const updatedNode: Node = {
-                                ...item,
-                                positionAbsolute: item.position,
-                                parentNode: newGroupId,
-                                expandParent: false,
-                                extent: 'parent'
-                            };
-
-                            return updatedNode;
-                            // return { ...item,  };
-                        }
-
-                        return item;
-                    })
-                ];
-            });
-        }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [selectedNodes]);
 
     const RenderContextSelectionMenu: JSX.Element = useMemo(() => {
         return (

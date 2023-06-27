@@ -9,10 +9,10 @@ import TriangleNode from '../nodes/TriangleNode';
 export default function useNodesTypes() {
     const nodesTypes: NodeTypes = useMemo(
         () => ({
-            [`${NodesFlowEnum.skeleton}`]: SkeletonNode,
-            [`${NodesFlowEnum.dot}`]: DotNode,
-            [`${NodesFlowEnum.square}`]: SquareNode,
-            [`${NodesFlowEnum.triangle}`]: TriangleNode
+            [NodesFlowEnum.skeleton]: SkeletonNode,
+            [NodesFlowEnum.dot]: DotNode,
+            [NodesFlowEnum.square]: SquareNode,
+            [NodesFlowEnum.triangle]: TriangleNode
         }),
         []
     );

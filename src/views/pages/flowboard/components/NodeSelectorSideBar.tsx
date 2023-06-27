@@ -2,11 +2,15 @@ import React, { DragEvent, ReactNode } from 'react';
 
 import { Box, IconButton, Stack } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
-import NodesFlowEnum from '../types/NodesEnum';
+
+// hooks
 import { useNodeCreator } from '../hooks/flowMethods';
 import useFlowContext from '../hooks/useFlowContext';
 import useNodesTypes from '../hooks/useNodesTypes';
 import nodesRules from '../settings/NodesRules';
+
+// types
+import NodesFlowEnum from '../types/NodesEnum';
 
 const drawerWidth = '15%';
 const minWidth = 130;

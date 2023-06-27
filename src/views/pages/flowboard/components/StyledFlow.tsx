@@ -27,7 +27,7 @@ const ReactFlowStyled = styled(ReactFlow)(({ theme }) => ({
 
 export default function CustomFlow() {
     const theme = useTheme();
-    const { nodes, edges, setFlowInstance, setSelectedNodeId, openDrawerFromNode, closeDrawer } = useFlowContext();
+    const { nodes, edges, setFlowInstance, setSelectedNodeId, openDrawerFromNode, closeDrawer, openForm } = useFlowContext();
 
     const { onNodesChange, onEdgesChange } = useFlowChanges();
     const { onConnect, onConnectStart, onConnectEnd } = useOnConnect();
@@ -40,6 +40,7 @@ export default function CustomFlow() {
     const onNodeClick = (e: React.MouseEvent, node: Node) => {
         setSelectedNodeId(node.id);
         openDrawerFromNode(node);
+        openForm();
     };
 
     const onPaneClick = (event: React.MouseEvent) => {

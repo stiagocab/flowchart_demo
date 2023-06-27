@@ -12,11 +12,12 @@ import { ReactFlowProvider } from 'reactflow';
 import { FlowContextProvider } from './context/FlowContext';
 import { dispatch } from 'store';
 import { openDrawer as openMenu } from 'store/slices/menu';
+import SettingsForm from './components/SettingsForm';
 
 function FlowCustomizer() {
     // hooks
     const theme = useTheme();
-    const { flowWrapper, isDrawerOpen, openDrawer, closeDrawer } = useFlowContext();
+    const { flowWrapper, isDrawerOpen, openDrawer, closeDrawer, formIsOpen, closeForm } = useFlowContext();
 
     useEffect(() => {
         dispatch(openMenu(false));
@@ -46,6 +47,8 @@ function FlowCustomizer() {
                 <Box sx={{ position: 'relative', width: 1, height: 1 }} className="reactflow-wrapper" ref={flowWrapper}>
                     <CustomFlow />
                 </Box>
+
+                <SettingsForm handleClose={closeForm} isOpen={formIsOpen} />
             </Box>
         </MainCard>
     );

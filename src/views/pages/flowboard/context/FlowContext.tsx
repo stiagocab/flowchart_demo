@@ -11,6 +11,7 @@ export const FlowContextProvider: React.FC<{ children: ReactNode }> = ({ childre
     const [flowInstance, setFlowInstance] = useState<ReactFlowInstance | null>(null);
     const [selectedNodeId, setSelectedNodeId] = useState<string | number | null>(null);
     const [isDrawerOpen, setIsDrawerOpen] = useState<boolean>(false);
+    const [formIsOpen, setFormIsOpen] = useState<boolean>(false);
     const store = useStoreApi();
 
     // hooks - refs
@@ -37,9 +38,16 @@ export const FlowContextProvider: React.FC<{ children: ReactNode }> = ({ childre
         setIsDrawerOpen(true);
     }, []);
 
+    // COMPONENTS DRAWER
     const openDrawer = useCallback(() => setIsDrawerOpen(true), []);
-
     const closeDrawer = useCallback(() => setIsDrawerOpen(false), []);
+
+    // FORMS DRAWER
+    const closeForm = useCallback(() => {
+        setFormIsOpen(false);
+        setSelectedNodeId(null);
+    }, []);
+    const openForm = useCallback(() => setFormIsOpen(true), []);
 
     const onNodeDragStart = (evt: any, node: Node) => {
         draggedNodeRef.current = node;
@@ -65,7 +73,10 @@ export const FlowContextProvider: React.FC<{ children: ReactNode }> = ({ childre
             openDrawer,
             store,
             onNodeDragStart,
-            draggedNodeRef
+            draggedNodeRef,
+            formIsOpen,
+            closeForm,
+            openForm
         };
         return values;
     }, [
@@ -84,7 +95,10 @@ export const FlowContextProvider: React.FC<{ children: ReactNode }> = ({ childre
         openDrawerFromNode,
         closeDrawer,
         openDrawer,
-        store
+        store,
+        formIsOpen,
+        closeForm,
+        openForm
     ]);
 
     return <FlowContext.Provider value={contextValue}>{children}</FlowContext.Provider>;
@@ -118,8 +132,8 @@ const initialFlow: Node[] = [
         position: { x: 220, y: 220 },
         positionAbsolute: { x: 220, y: 220 },
         data: { parent: '', label: 'A3', hideHandle: false }
-    },
-    { id: '5', type: NodesFlowEnum.dot, position: { x: 240, y: 40 }, parentNode: '1', data: { parent: '', label: 'A4', hideHandle: false } }
+    }
+    // { id: '5', type: NodesFlowEnum.dot, position: { x: 240, y: 40 }, parentNode: '1', data: { parent: '', label: 'A4', hideHandle: false } }
     // { id: 'start', type: 'skeleton', position: { x: 100, y: 0 }, data: { parent: '', label: 'start', hideHandle: true } }
 ];
 
@@ -132,3 +146,8 @@ const initialEdge: Edge[] = [
         animated: true
     }
 ];
+
+// creación: POST https://{{host}}/api/{{workspace}}/workflows
+// busqueda: GET https://{{host}}/api/{{workspace}}/workflows
+// https://{{host}}/api/{{workspace}}/workflows/{{workflowId}}
+// Actualizacion: PATCH https://{{host}}/api/{{workspace}}/workflows/{{workflowId}}
