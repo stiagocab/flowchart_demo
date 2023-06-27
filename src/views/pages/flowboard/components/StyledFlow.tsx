@@ -85,6 +85,7 @@ export default function CustomFlow() {
                 />
                 <Controls />
                 <Background variant={BackgroundVariant.Dots} gap={12} size={1} />
+                <Background variant={BackgroundVariant.Dots} gap={12} size={1} />
                 {RenderContextSelectionMenu}
                 {RenderContextNodeMenu}
             </ReactFlowStyled>

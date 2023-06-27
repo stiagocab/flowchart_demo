@@ -54,7 +54,7 @@ const Sidebar = () => {
                 }}
             >
                 <MenuList />
-                {layout === LAYOUT_CONST.VERTICAL_LAYOUT && drawerOpen && <MenuCard />}
+                {/* {layout === LAYOUT_CONST.VERTICAL_LAYOUT && drawerOpen && <MenuCard />} */}
                 {layout === LAYOUT_CONST.VERTICAL_LAYOUT && drawerOpen && (
                     <Stack direction="row" justifyContent="center" sx={{ mb: 2 }}>
                         <Chip

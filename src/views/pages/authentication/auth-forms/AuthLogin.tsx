@@ -236,11 +236,7 @@ const FirebaseLogin = ({ loginProp, ...others }: { loginProp?: number }) => {
                             <Typography
                                 variant="subtitle1"
                                 component={Link}
-                                to={
-                                    loginProp
-                                        ? `/pages/forgot-password/forgot-password${loginProp}`
-                                        : '/pages/forgot-password/forgot-password3'
-                                }
+                                to={`/forgot`}
                                 color="secondary"
                                 sx={{ textDecoration: 'none' }}
                             >

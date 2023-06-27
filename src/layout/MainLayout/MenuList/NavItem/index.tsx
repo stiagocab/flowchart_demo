@@ -1,4 +1,4 @@
-import { ForwardRefExoticComponent, RefAttributes, forwardRef, useEffect } from 'react';
+import { ForwardRefExoticComponent, RefAttributes, forwardRef, useEffect, useMemo } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 
 // material-ui
@@ -32,8 +32,18 @@ const NavItem = ({ item, level, parentId }: NavItemProps) => {
     const { pathname } = useLocation();
     const { layout, borderRadius } = useConfig();
 
-    const { selectedItem, drawerOpen } = useSelector((state) => state.menu);
-    const isSelected = selectedItem.findIndex((id) => id === item.id) > -1;
+    const { drawerOpen, selectedItem } = useSelector((state) => state.menu);
+
+    // const isSelected = selectedItem.findIndex((id) => id === item.id?.replace('/', '')) > -1;
+
+    const isSelected: boolean = useMemo<boolean>(() => {
+        const searchInPath = pathname
+            .toString()
+            .split('/')
+            .findIndex((id) => id === item.id?.replace('/', ''));
+
+        return searchInPath > -1;
+    }, [pathname, item.id]);
 
     const Icon = item?.icon!;
     const itemIcon = item?.icon ? (
@@ -69,19 +79,23 @@ const NavItem = ({ item, level, parentId }: NavItemProps) => {
 
     const itemHandler = (id: string) => {
         dispatch(activeItem([id]));
+
         if (matchesSM) dispatch(openDrawer(false));
+
         dispatch(activeID(parentId));
     };
 
     // active menu item on page load
     useEffect(() => {
-        const currentIndex = document.location.pathname
-            .toString()
-            .split('/')
-            .findIndex((id) => id === item.id);
-        if (currentIndex > -1) {
-            dispatch(activeItem([item.id]));
-        }
+        // const currentIndex = document.location.pathname
+        //     .toString()
+        //     .split('/')
+        //     .findIndex((id) => id === item.id?.replace('/', ''));
+
+        // if (currentIndex) {
+        dispatch(activeItem([item.id]));
+        // }
+
         // eslint-disable-next-line
     }, [pathname]);
 
@@ -129,7 +143,7 @@ const NavItem = ({ item, level, parentId }: NavItemProps) => {
                         })
                     }}
                     selected={isSelected}
-                    onClick={() => itemHandler(item.id!)}
+                    // onClick={() => itemHandler(item.id!)}
                 >
                     <ButtonBase sx={{ borderRadius: `${borderRadius}px` }} disableRipple={drawerOpen}>
                         <ListItemIcon
