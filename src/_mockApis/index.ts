@@ -1,5 +1,4 @@
 // auth
-import './account';
 
 // user activity
 import './user-profile';

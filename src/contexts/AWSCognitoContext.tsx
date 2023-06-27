@@ -130,6 +130,22 @@ export const AWSCognitoProvider = ({ children }: { children: React.ReactElement 
             );
         });
 
+    const resetPassword = (email: string): Promise<void> => {
+        return new Promise<void>((resolve, reject) => {
+            // Simulate a delay to mimic an asynchronous operation
+            setTimeout(() => {
+                // Check if the email is valid
+                if (email.split('').some((char) => char === '@')) {
+                    // Password reset successful
+                    resolve();
+                } else {
+                    // Invalid email
+                    reject(new Error('Invalid email'));
+                }
+            }, 2000); // Simulating a 2-second delay
+        });
+    };
+
     const logout = () => {
         const loggedInUser = userPool.getCurrentUser();
         if (loggedInUser) {
@@ -143,7 +159,7 @@ export const AWSCognitoProvider = ({ children }: { children: React.ReactElement 
         return <Loader />;
     }
 
-    return <AWSCognitoContext.Provider value={{ ...state, login, logout, register }}>{children}</AWSCognitoContext.Provider>;
+    return <AWSCognitoContext.Provider value={{ ...state, login, logout, register, resetPassword }}>{children}</AWSCognitoContext.Provider>;
 };
 
 export default AWSCognitoContext;
