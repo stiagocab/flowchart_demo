@@ -29,6 +29,8 @@ import AnimateButton from 'ui-component/extended/AnimateButton';
 // assets
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
+import useAuth from 'hooks/useAuth';
+import useScriptRef from 'hooks/useScriptRef';
 
 // ============================|| FIREBASE - LOGIN ||============================ //
 
@@ -36,6 +38,8 @@ const FirebaseLogin = ({ loginProp, ...others }: { loginProp?: number }) => {
     const theme = useTheme();
 
     const [checked, setChecked] = React.useState(true);
+    const { login } = useAuth();
+    const scriptedRef = useScriptRef();
 
     const [showPassword, setShowPassword] = React.useState(false);
     const handleClickShowPassword = () => {
@@ -63,11 +67,25 @@ const FirebaseLogin = ({ loginProp, ...others }: { loginProp?: number }) => {
                     submit: null
                 }}
                 validationSchema={Yup.object().shape({
-                    email: Yup.string().email('Must be a valid email').max(255).required('Email is required'),
+                    email: Yup.string().max(255).required('Username is required'),
                     password: Yup.string().max(255).required('Password is required')
                 })}
                 onSubmit={async (values, { setErrors, setStatus, setSubmitting }) => {
-                    console.log('VAUES', values);
+                    try {
+                        await login(values.email, values.password);
+
+                        if (scriptedRef.current) {
+                            setStatus({ success: true });
+                            setSubmitting(false);
+                        }
+                    } catch (err: any) {
+                        console.error(err);
+                        if (scriptedRef.current) {
+                            setStatus({ success: false });
+                            setErrors({ submit: err.message });
+                            setSubmitting(false);
+                        }
+                    }
                 }}
             >
                 {({ errors, handleBlur, handleChange, handleSubmit, isSubmitting, touched, values }) => (

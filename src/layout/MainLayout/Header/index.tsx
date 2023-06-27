@@ -10,8 +10,8 @@ import SearchSection from './SearchSection';
 import MobileSection from './MobileSection';
 import ProfileSection from './ProfileSection';
 import LocalizationSection from './LocalizationSection';
-import MegaMenuSection from './MegaMenuSection';
-import NotificationSection from './NotificationSection';
+
+import { IconMoon, IconSun } from '@tabler/icons';
 
 import { useDispatch, useSelector } from 'store';
 import { openDrawer } from 'store/slices/menu';
@@ -28,7 +28,7 @@ const Header = () => {
     const { drawerOpen } = useSelector((state) => state.menu);
 
     const matchDownMd = useMediaQuery(theme.breakpoints.down('md'));
-    const { layout } = useConfig();
+    const { layout, navType, onChangeMenuType } = useConfig();
 
     return (
         <>
@@ -74,17 +74,38 @@ const Header = () => {
             <Box sx={{ flexGrow: 1 }} />
 
             {/* mega-menu */}
-            <Box sx={{ display: { xs: 'none', sm: 'block' } }}>
+            {/* <Box sx={{ display: { xs: 'none', sm: 'block' } }}>
                 <MegaMenuSection />
-            </Box>
+            </Box> */}
 
             {/* live customization & localization */}
             <Box sx={{ display: { xs: 'none', sm: 'block' } }}>
                 <LocalizationSection />
             </Box>
 
+            <Box sx={{ ml: 1, mr: 1 }}>
+                {/* {navType === 'dark' ? <IconSun stroke={1.5} size="1.3rem" /> : <IconMoon stroke={1.5} size="1.3rem" />} */}
+                <Avatar
+                    variant="rounded"
+                    sx={{
+                        ...theme.typography.commonAvatar,
+                        ...theme.typography.mediumAvatar,
+                        transition: 'all .2s ease-in-out',
+                        background: theme.palette.mode === 'dark' ? theme.palette.dark.main : theme.palette.secondary.light,
+                        color: theme.palette.mode === 'dark' ? theme.palette.grey[900] : theme.palette.secondary.dark,
+                        '&[aria-controls="menu-list-grow"],&:hover': {
+                            background: theme.palette.mode === 'dark' ? theme.palette.warning.dark : theme.palette.secondary.dark,
+                            color: theme.palette.mode === 'dark' ? theme.palette.grey[800] : theme.palette.secondary.light
+                        }
+                    }}
+                    onClick={() => onChangeMenuType(navType === 'dark' ? 'light' : 'dark')}
+                    // color={theme.palette.secondary.main}
+                >
+                    {navType === 'dark' ? <IconSun stroke={1.5} size="1.3rem" /> : <IconMoon stroke={1.5} size="1.3rem" />}
+                </Avatar>
+            </Box>
+
             {/* notification & profile */}
-            <NotificationSection />
             <ProfileSection />
 
             {/* mobile header */}
