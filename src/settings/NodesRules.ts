@@ -1,5 +1,5 @@
-import NodesFlowEnum from '../types/NodesEnum';
-import { INodeConditions } from '../types/nodes';
+import NodesFlowEnum from 'types/NodesEnum';
+import { INodeConditions } from 'types/nodes';
 
 const nodesRules: INodeConditions[] = [
     {

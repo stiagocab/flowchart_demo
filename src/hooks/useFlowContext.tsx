@@ -1,5 +1,5 @@
+import { FlowContext } from 'contexts/FlowContext';
 import React from 'react';
-import { FlowContext } from '../context/FlowContext';
 
 const useFlowContext = () => {
     const context = React.useContext(FlowContext);

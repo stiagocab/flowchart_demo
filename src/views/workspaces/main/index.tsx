@@ -13,27 +13,25 @@ import MainCard from 'ui-component/cards/MainCard';
 import { FLOW_ROUTES } from 'routes/pathGenerator';
 import { useIntl } from 'react-intl';
 
-export default function WorkspacePages() {
+export default function WorkspacesListPages() {
     const intl = useIntl();
 
     return (
         <>
             <MainCard
                 content
-                title={
-                    <Stack direction="row" alignItems="center" justifyContent="space-between">
-                        <Typography variant="h3">{intl.formatMessage({ id: 'workspaces' })}</Typography>
-                        <Button
-                            title={intl.formatMessage({ id: 'new_workspace' })}
-                            variant="outlined"
-                            startIcon={<AddIcon />}
-                            sx={{ ml: 1 }}
-                            component={Link}
-                            to={FLOW_ROUTES.workspaceCreate}
-                        >
-                            {intl.formatMessage({ id: 'new' })}
-                        </Button>
-                    </Stack>
+                title={intl.formatMessage({ id: 'workspaces' })}
+                secondary={
+                    <Button
+                        title={intl.formatMessage({ id: 'new_workspace' })}
+                        variant="outlined"
+                        startIcon={<AddIcon />}
+                        sx={{ ml: 1 }}
+                        component={Link}
+                        to={FLOW_ROUTES.workspaceCreate}
+                    >
+                        {intl.formatMessage({ id: 'new' })}
+                    </Button>
                 }
             >
                 <Button component={Link} to={FLOW_ROUTES.workspaceCreate}>

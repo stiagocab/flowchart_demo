@@ -2,7 +2,7 @@ import { useEffect } from 'react';
 
 import MainCard from 'ui-component/cards/MainCard';
 
-import { Box, IconButton, Fade, useTheme } from '@mui/material';
+import { Box, IconButton, Fade, useTheme, Stack, Typography } from '@mui/material';
 import SortIcon from '@mui/icons-material/Sort';
 
 import NodeSelectorSidebar from 'ui-component/flow/NodeSelectorSideBar';
@@ -13,9 +13,11 @@ import { FlowContextProvider } from '../../../contexts/FlowContext';
 import { dispatch } from 'store';
 import { openDrawer as openMenu } from 'store/slices/menu';
 import SettingsForm from 'ui-component/flow/SettingsForm';
+import { useIntl } from 'react-intl';
 
 function FlowCustomizer() {
     // hooks
+    const intl = useIntl();
     const theme = useTheme();
     const { flowWrapper, isDrawerOpen, openDrawer, closeDrawer, formIsOpen, closeForm } = useFlowContext();
 
@@ -24,7 +26,7 @@ function FlowCustomizer() {
     }, []);
 
     return (
-        <MainCard content={false}>
+        <MainCard content={false} title={intl.formatMessage({ id: 'workspace' })}>
             <Box sx={{ display: 'flex', position: 'relative', width: 1, height: 520 }}>
                 <NodeSelectorSidebar handleClose={closeDrawer} isOpen={isDrawerOpen} />
                 <Fade in={!isDrawerOpen}>

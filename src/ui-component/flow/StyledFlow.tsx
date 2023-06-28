@@ -11,15 +11,15 @@ import ReactFlow, { Controls, Background, BackgroundVariant, MiniMap, Node, Conn
 import ConnectionLine from './ConnectionLine';
 
 // hooks
-import useFlowContext from '../hooks/useFlowContext';
-import useNodesTypes from '../hooks/useNodesTypes';
-import { useFlowChanges, useNodeCreator, useOnConnect } from '../hooks/flowMethods';
-import { useDragAndDrop } from '../hooks/useDragAndDrop';
-import useSelection from '../hooks/useSelection';
+import useFlowContext from 'hooks/useFlowContext';
+import useNodesTypes from 'hooks/useNodesTypes';
+import { useFlowChanges, useNodeCreator, useOnConnect } from 'hooks/flowMethods';
+import { useDragAndDrop } from 'hooks/useDragAndDrop';
+import useSelection from 'hooks/useSelection';
 
 // styles
 import 'reactflow/dist/style.css';
-import '../styles.css';
+// import '../styles.css';
 
 const ReactFlowStyled = styled(ReactFlow)(({ theme }) => ({
     backgroundColor: theme.palette.background.default

@@ -5,12 +5,13 @@ import { Node, useOnSelectionChange } from 'reactflow';
 import DeleteIcon from '@mui/icons-material/Delete';
 import AlignHorizontalCenterIcon from '@mui/icons-material/AlignHorizontalCenter';
 import AlignVerticalCenterIcon from '@mui/icons-material/AlignVerticalCenter';
-import RightClickMenu from '../components/Menu/RightClickMenu';
+// import RightClickMenu from '../../../../ui-component/flow/RightClickMenu';
 
 import useFlowContext from './useFlowContext';
 
 // functions
-import { centerHorizontal, centerVertical } from './helpers';
+import { centerHorizontal, centerVertical } from 'utils/helpers';
+import RightClickMenu from 'ui-component/flow/RightClickMenu';
 
 export default function useSelection(): useSelectionProps {
     const { setNodes, store } = useFlowContext();

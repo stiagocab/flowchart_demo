@@ -8,8 +8,8 @@ import SettingsIcon from '@mui/icons-material/Settings';
 
 import { Position } from 'reactflow';
 
-import CustomHandle from '../components/CustomHandle';
-import { ICustomNodeProps } from '../types/nodes';
+import { ICustomNodeProps } from 'types/nodes';
+import CustomHandle from 'ui-component/flow/CustomHandle';
 
 function SkeletonNode({ data, selected }: ICustomNodeProps) {
     const theme = useTheme();

@@ -14,6 +14,7 @@ import { ConfigProvider } from 'contexts/ConfigContext';
 
 // style + assets
 import 'assets/scss/style.scss';
+import 'assets/scss/flows.scss';
 
 // ==============================|| REACT DOM RENDER  ||============================== //
 

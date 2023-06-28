@@ -1,10 +1,10 @@
-import { ComponentType, useCallback, useMemo } from 'react';
+import { ComponentType, useMemo } from 'react';
 import { NodeTypes } from 'reactflow';
-import SkeletonNode from '../nodes/SkeletonNode';
-import NodesFlowEnum from '../types/NodesEnum';
-import DotNode from '../nodes/Dot';
-import SquareNode from '../nodes/Square';
-import TriangleNode from '../nodes/TriangleNode';
+import SkeletonNode from 'nodes/SkeletonNode';
+import NodesFlowEnum from 'types/NodesEnum';
+import DotNode from 'nodes/Dot';
+import SquareNode from 'nodes/Square';
+import TriangleNode from 'nodes/TriangleNode';
 
 export default function useNodesTypes() {
     const nodesTypes: NodeTypes = useMemo(

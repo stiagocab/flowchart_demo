@@ -1,6 +1,6 @@
 import { Menu, IconButton, Paper } from '@mui/material';
 
-import { ContextMenuOptionType } from '../../types/menu';
+import { ContextMenuOptionType } from '../../types/ContextMenu';
 
 export type RightClickMenuType = {
     anchorEl: null | HTMLElement;

@@ -1,8 +1,8 @@
 import React, { createContext, ReactNode, useMemo, useState, useRef, useCallback } from 'react';
 
 import { Edge, Node, ReactFlowInstance, useEdgesState, useNodesState, useReactFlow, useStoreApi } from 'reactflow';
-import { FlowContextProps } from '../types/flow';
 import NodesFlowEnum from '../types/NodesEnum';
+import { FlowContextProps } from 'types/flow';
 
 // Create the FlowContext
 export const FlowContext = createContext<FlowContextProps | undefined>(undefined);

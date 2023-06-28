@@ -4,7 +4,7 @@ import { XYPosition, Node } from 'reactflow';
 
 import useFlowContext from '../hooks/useFlowContext';
 import { useDragAndDropProps } from '../types/flow';
-import { searchTargetNode, generateUUID, getBelowNode, replaceAnimatedEdge } from './helpers';
+import { searchTargetNode, generateUUID, getBelowNode, replaceAnimatedEdge } from 'utils/helpers';
 import NodesFlowEnum from '../types/NodesEnum';
 
 export const useDragAndDrop = (): useDragAndDropProps => {

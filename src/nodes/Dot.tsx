@@ -1,11 +1,9 @@
 import { Box, Typography, useTheme } from '@mui/material';
 import { Position } from 'reactflow';
-import CustomHandle from '../components/CustomHandle';
 import { ICustomNodeProps } from '../types/nodes';
+import CustomHandle from 'ui-component/flow/CustomHandle';
 
 export default function DotNode({ data, selected }: ICustomNodeProps) {
-    const theme = useTheme();
-
     return (
         <>
             <CustomHandle hide={data.hideHandle} type="target" position={Position.Top} id="dot-target" />

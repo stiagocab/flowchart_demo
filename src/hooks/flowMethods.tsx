@@ -17,9 +17,9 @@ import {
 } from 'reactflow';
 
 import useFlowContext from '../hooks/useFlowContext';
-import { useNodeCreatorProps, useFlowChangesProps, useOnConnectProps } from '../types/flow';
-import { generatePosition, generateUUID } from './helpers';
+import { generatePosition, generateUUID } from '../utils/helpers';
 import NodesFlowEnum from '../types/NodesEnum';
+import { useNodeCreatorProps, useFlowChangesProps, useOnConnectProps } from 'types/flow';
 
 export const useFlowChanges = (): useFlowChangesProps => {
     const { setNodes, setEdges } = useFlowContext();

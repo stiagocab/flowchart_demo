@@ -7,8 +7,8 @@ import AuthGuard from 'utils/route-guard/AuthGuard';
 
 import { FLOW_ROUTES } from './pathGenerator';
 
-const WorkspaceEditor = Loadable(lazy(() => import('views/pages/flowboard')));
-const WorkspacePages = Loadable(lazy(() => import('views/workspaces/main')));
+const WorkspaceEditorPage = Loadable(lazy(() => import('views/workspaces/editor')));
+const WorkspaceListPage = Loadable(lazy(() => import('views/workspaces/main')));
 
 // ==============================|| MAIN ROUTING ||============================== //
 
@@ -22,11 +22,11 @@ const MainRoutes = {
     children: [
         {
             path: FLOW_ROUTES.main,
-            element: <WorkspacePages />
+            element: <WorkspaceListPage />
         },
         {
             path: FLOW_ROUTES.workspaceCreate,
-            element: <WorkspaceEditor />
+            element: <WorkspaceEditorPage />
         }
     ]
 };

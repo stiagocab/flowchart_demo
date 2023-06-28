@@ -1,8 +1,8 @@
 import React from 'react';
 import { Box, Typography } from '@mui/material';
 import { Position } from 'reactflow';
-import CustomHandle from '../components/CustomHandle';
 import { ICustomNodeProps } from '../types/nodes';
+import CustomHandle from 'ui-component/flow/CustomHandle';
 
 export default function TriangleNode({ data, selected }: ICustomNodeProps) {
     return (
