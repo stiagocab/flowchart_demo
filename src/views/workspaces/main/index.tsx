@@ -18,22 +18,7 @@ export default function WorkspacesListPages() {
 
     return (
         <>
-            <MainCard
-                content
-                title={intl.formatMessage({ id: 'workspaces' })}
-                secondary={
-                    <Button
-                        title={intl.formatMessage({ id: 'new_workspace' })}
-                        variant="outlined"
-                        startIcon={<AddIcon />}
-                        sx={{ ml: 1 }}
-                        component={Link}
-                        to={FLOW_ROUTES.workspaceCreate}
-                    >
-                        {intl.formatMessage({ id: 'new' })}
-                    </Button>
-                }
-            >
+            <MainCard content title={intl.formatMessage({ id: 'workspaces' })}>
                 <Button component={Link} to={FLOW_ROUTES.workspaceCreate}>
                     {intl.formatMessage({ id: 'new_workspace' })}
                 </Button>
