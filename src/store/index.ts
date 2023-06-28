@@ -23,6 +23,7 @@ export type AppDispatch = typeof store.dispatch;
 const { dispatch } = store;
 
 const useDispatch = () => useAppDispatch<AppDispatch>();
+
 const useSelector: TypedUseSelectorHook<RootState> = useAppSelector;
 
 export { store, persister, dispatch, useSelector, useDispatch };

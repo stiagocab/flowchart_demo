@@ -3,15 +3,11 @@ import { createRoot } from 'react-dom/client';
 // third party
 import { BrowserRouter } from 'react-router-dom';
 import { Provider } from 'react-redux';
-import { PersistGate } from 'redux-persist/integration/react';
-
-// load mock apis
-// import '_mockApis';
 
 // project imports
 import App from 'App';
 import { BASE_PATH } from 'config';
-import { store, persister } from 'store';
+import { store } from 'store';
 import * as serviceWorker from 'serviceWorker';
 import reportWebVitals from 'reportWebVitals';
 import { ConfigProvider } from 'contexts/ConfigContext';
@@ -26,13 +22,13 @@ const root = createRoot(container!);
 
 root.render(
     <Provider store={store}>
-        <PersistGate loading={null} persistor={persister}>
-            <ConfigProvider>
-                <BrowserRouter basename={BASE_PATH}>
-                    <App />
-                </BrowserRouter>
-            </ConfigProvider>
-        </PersistGate>
+        {/* <PersistGate loading={null} persistor={persister}> */}
+        <ConfigProvider>
+            <BrowserRouter basename={BASE_PATH}>
+                <App />
+            </BrowserRouter>
+        </ConfigProvider>
+        {/* </PersistGate> */}
     </Provider>
 );
 
