@@ -3,20 +3,7 @@ import React, { useState, useEffect } from 'react';
 // third-party
 import { IntlProvider, MessageFormatElement } from 'react-intl';
 import useConfig from 'hooks/useConfig';
-
-// load locales files
-const loadLocaleData = (locale: string) => {
-    switch (locale) {
-        case 'fr':
-            return import('utils/locales/fr.json');
-        case 'ro':
-            return import('utils/locales/ro.json');
-        case 'zh':
-            return import('utils/locales/zh.json');
-        default:
-            return import('utils/locales/en.json');
-    }
-};
+import { useLoadLocaleData } from 'hooks/useLanguages';
 
 // ==============================|| LOCALIZATION ||============================== //
 
@@ -28,11 +15,11 @@ const Locales = ({ children }: LocalsProps) => {
     const { locale } = useConfig();
     const [messages, setMessages] = useState<Record<string, string> | Record<string, MessageFormatElement[]> | undefined>();
 
+    const localeData = useLoadLocaleData(locale);
+
     useEffect(() => {
-        loadLocaleData(locale).then((d: { default: Record<string, string> | Record<string, MessageFormatElement[]> | undefined }) => {
-            setMessages(d.default);
-        });
-    }, [locale]);
+        setMessages(localeData);
+    }, [localeData]);
 
     return (
         <>

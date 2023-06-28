@@ -147,5 +147,8 @@
     "account-settings": "Account settings",
     "logout": "Logout",
 
-    "more-items": "More Items"
+    "more-items": "More Items",
+    "workspaces": "Workspaces",
+    "new": "New",
+    "new_workspace": "New workspace"
 }
