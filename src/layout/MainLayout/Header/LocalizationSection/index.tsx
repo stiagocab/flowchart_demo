@@ -9,6 +9,7 @@ import {
     Grid,
     List,
     ListItemButton,
+    ListItemIcon,
     ListItemText,
     Paper,
     Popper,
@@ -22,6 +23,9 @@ import Transitions from 'ui-component/extended/Transitions';
 // assets
 import TranslateTwoToneIcon from '@mui/icons-material/TranslateTwoTone';
 import useConfig from 'hooks/useConfig';
+
+import USAIcon from 'assets/images/countries/us.png';
+import MXIcon from 'assets/images/countries/mx.png';
 
 // ==============================|| LOCALIZATION ||============================== //
 
@@ -119,7 +123,7 @@ const LocalizationSection = () => {
                     {
                         name: 'offset',
                         options: {
-                            offset: [matchesXs ? 0 : 0, 20]
+                            offset: [matchesXs ? 0 : -50, 20]
                         }
                     }
                 ]}
@@ -133,8 +137,8 @@ const LocalizationSection = () => {
                                         component="nav"
                                         sx={{
                                             width: '100%',
-                                            minWidth: 200,
-                                            maxWidth: 280,
+                                            minWidth: 150,
+                                            maxWidth: 200,
                                             bgcolor: theme.palette.background.paper,
                                             borderRadius: `${borderRadius}px`,
                                             [theme.breakpoints.down('md')]: {
@@ -142,66 +146,42 @@ const LocalizationSection = () => {
                                             }
                                         }}
                                     >
-                                        <ListItemButton selected={language === 'en'} onClick={(event) => handleListItemClick(event, 'en')}>
-                                            <ListItemText
-                                                primary={
-                                                    <Grid container>
-                                                        <Typography color="textPrimary">English</Typography>
-                                                        <Typography variant="caption" color="textSecondary" sx={{ ml: '8px' }}>
-                                                            (UK)
-                                                        </Typography>
-                                                    </Grid>
-                                                }
-                                            />
-                                        </ListItemButton>
-                                        <ListItemButton selected={language === 'es'} onClick={(event) => handleListItemClick(event, 'es')}>
+                                        {lenguajesOptions.map((itemLenguage) => (
+                                            <ListItemButton
+                                                key={itemLenguage.key}
+                                                selected={language === itemLenguage.key}
+                                                onClick={(event) => handleListItemClick(event, itemLenguage.key)}
+                                            >
+                                                <ListItemIcon>
+                                                    <Box
+                                                        component="img"
+                                                        src={itemLenguage.icon}
+                                                        alt={itemLenguage.key}
+                                                        sx={{ width: 25, height: 25 }}
+                                                    />
+                                                </ListItemIcon>
+                                                <ListItemText
+                                                    primary={
+                                                        <Grid container>
+                                                            <Typography color="textPrimary">{itemLenguage.name}</Typography>
+                                                        </Grid>
+                                                    }
+                                                />
+                                            </ListItemButton>
+                                        ))}
+
+                                        {/* <ListItemButton selected={language === 'es'} onClick={(event) => handleListItemClick(event, 'es')}>
+                                            <ListItemIcon>
+                                                <Box component="img" src={MXIcon} alt="mx" sx={{ width: 25, height: 25 }} />
+                                            </ListItemIcon>
                                             <ListItemText
                                                 primary={
                                                     <Grid container>
                                                         <Typography color="textPrimary">Español</Typography>
-                                                        <Typography variant="caption" color="textSecondary" sx={{ ml: '8px' }}>
-                                                            (MX)
-                                                        </Typography>
                                                     </Grid>
                                                 }
                                             />
-                                        </ListItemButton>
-                                        <ListItemButton selected={language === 'fr'} onClick={(event) => handleListItemClick(event, 'fr')}>
-                                            <ListItemText
-                                                primary={
-                                                    <Grid container>
-                                                        <Typography color="textPrimary">français</Typography>
-                                                        <Typography variant="caption" color="textSecondary" sx={{ ml: '8px' }}>
-                                                            (French)
-                                                        </Typography>
-                                                    </Grid>
-                                                }
-                                            />
-                                        </ListItemButton>
-                                        <ListItemButton selected={language === 'ro'} onClick={(event) => handleListItemClick(event, 'ro')}>
-                                            <ListItemText
-                                                primary={
-                                                    <Grid container>
-                                                        <Typography color="textPrimary">Română</Typography>
-                                                        <Typography variant="caption" color="textSecondary" sx={{ ml: '8px' }}>
-                                                            (Romanian)
-                                                        </Typography>
-                                                    </Grid>
-                                                }
-                                            />
-                                        </ListItemButton>
-                                        <ListItemButton selected={language === 'zh'} onClick={(event) => handleListItemClick(event, 'zh')}>
-                                            <ListItemText
-                                                primary={
-                                                    <Grid container>
-                                                        <Typography color="textPrimary">中国人</Typography>
-                                                        <Typography variant="caption" color="textSecondary" sx={{ ml: '8px' }}>
-                                                            (Chinese)
-                                                        </Typography>
-                                                    </Grid>
-                                                }
-                                            />
-                                        </ListItemButton>
+                                        </ListItemButton> */}
                                     </List>
                                 )}
                             </Paper>
@@ -214,3 +194,8 @@ const LocalizationSection = () => {
 };
 
 export default LocalizationSection;
+
+const lenguajesOptions = [
+    { key: 'en', icon: USAIcon, name: 'English' },
+    { key: 'es', icon: MXIcon, name: 'Español' }
+];
