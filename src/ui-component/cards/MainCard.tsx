@@ -6,14 +6,12 @@ import {
     Card,
     CardContent,
     CardHeader,
-    Divider,
     Typography,
     CardProps,
     CardHeaderProps,
     CardContentProps,
     Stack,
     IconButton,
-    Fade,
     Collapse
 } from '@mui/material';
 
@@ -44,7 +42,8 @@ export interface MainCardProps extends KeyedObject {
     secondary?: CardHeaderProps['action'];
     shadow?: string;
     elevation?: number;
-    title?: React.ReactNode | string;
+    title?: string;
+    header?: React.ReactNode;
 }
 
 const MainCard = React.forwardRef(
@@ -62,6 +61,7 @@ const MainCard = React.forwardRef(
             sx = {},
             title,
             showBack,
+            header,
             ...others
         }: MainCardProps,
         ref: Ref<HTMLDivElement>
@@ -89,6 +89,7 @@ const MainCard = React.forwardRef(
                             action={secondary}
                         />
                     )}
+                    {header && header}
                 </Card>
                 <Card
                     ref={ref}
