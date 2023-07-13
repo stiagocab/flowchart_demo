@@ -27,6 +27,10 @@ const MainRoutes = {
         {
             path: FLOW_ROUTES.workspaceCreate,
             element: <WorkspaceEditorPage />
+        },
+        {
+            path: FLOW_ROUTES.workspaceEdit,
+            element: <WorkspaceEditorPage />
         }
     ]
 };

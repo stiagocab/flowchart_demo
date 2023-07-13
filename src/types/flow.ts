@@ -76,3 +76,20 @@ export type useNodeCreatorProps = {
     replaceNode: (nodeType: NodesFlowEnum | string) => void;
     onNodesDelete: (deleted: Node[]) => void;
 };
+
+export type WorkspacesType = {
+    id: number;
+    name: string;
+    description: string;
+    components: {
+        config: {
+            name: string;
+            description: string;
+            type: string;
+            params: { [key: string]: any }[];
+        };
+        input?: string;
+        nextId?: string;
+        prevId?: string;
+    }[];
+};

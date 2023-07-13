@@ -20,10 +20,13 @@ import { dispatch } from 'store';
 
 import { FlowContextProvider } from 'contexts/FlowContext';
 import { openDrawer as openMenu } from 'store/slices/menu';
+import { useParams } from 'react-router-dom';
+import { getWorkspace } from 'sampleData';
 
 function FlowCustomizer() {
     // hooks
     const theme = useTheme();
+
     const { flowWrapper, isDrawerOpen, openDrawer, closeDrawer, formIsOpen, closeForm } = useFlowContext();
 
     useEffect(() => {

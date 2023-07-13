@@ -19,6 +19,7 @@ import useSelection from 'hooks/useSelection';
 
 // styles
 import 'reactflow/dist/style.css';
+import NodesFlowEnum from 'types/NodesEnum';
 // import '../styles.css';
 
 const ReactFlowStyled = styled(ReactFlow)(({ theme }) => ({

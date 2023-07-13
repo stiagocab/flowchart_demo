@@ -1,5 +1,6 @@
 import { Node, XYPosition, Edge } from 'reactflow';
 import NodesFlowEnum from '../types/NodesEnum';
+import flowSettings from 'settings';
 
 export function generatePosition(parentNode: Node, newNodeWidth?: number): XYPosition {
     if (!parentNode) {
@@ -12,7 +13,7 @@ export function generatePosition(parentNode: Node, newNodeWidth?: number): XYPos
 
     const centerPositionX = parentX + newNodeWidth / 2;
 
-    return { x: centerPositionX, y: parentNode.position.y + 100 };
+    return { x: centerPositionX, y: parentNode.position.y + flowSettings.verticalGap };
 }
 
 export function generateUUID() {
@@ -156,8 +157,6 @@ export const createGroupPosition = (nodes: Node[]): { position: XYPosition; widt
     let endXPosition = startXPosition + initialNode.width!;
     let endYPosition = startYPosition + initialNode.height!;
 
-    // console.log(nodes);
-
     nodes.forEach((itemA) => {
         const startX = itemA.position.x;
         const startY = itemA.position.y;
@@ -189,4 +188,26 @@ export const createGroupPosition = (nodes: Node[]): { position: XYPosition; widt
         width: position.end.x - position.start.x,
         height: position.end.y - position.start.y
     };
+};
+
+export const generatePositionsFromCenter = (prevNodes: Omit<Node, 'position'>[], parentPosition: XYPosition, center: number): Node[] => {
+    const width = flowSettings.nodeSize;
+    const gap = flowSettings.horizontalGap;
+    let nodes: Node[] = [];
+    const yPosition = parentPosition.y + flowSettings.verticalGap + flowSettings.nodeSize;
+
+    const totalWidth = prevNodes.length * width + (prevNodes.length - 1) * gap;
+
+    const startPosition = center - totalWidth / 2;
+
+    prevNodes.forEach((item, index) => {
+        let position = {
+            x: startPosition + (gap + width) * index,
+            y: yPosition
+        };
+
+        nodes = [...nodes, { ...item, position }];
+    });
+
+    return nodes;
 };

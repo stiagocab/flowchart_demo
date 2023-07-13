@@ -1,8 +1,13 @@
-import React, { createContext, ReactNode, useMemo, useState, useRef, useCallback } from 'react';
+/* eslint-disable @typescript-eslint/no-unused-vars */
+import React, { createContext, ReactNode, useMemo, useState, useRef, useCallback, useEffect } from 'react';
 
 import { Edge, Node, ReactFlowInstance, useEdgesState, useNodesState, useReactFlow, useStoreApi } from 'reactflow';
 import NodesFlowEnum from '../types/NodesEnum';
-import { FlowContextProps } from 'types/flow';
+import { FlowContextProps, WorkspacesType } from 'types/flow';
+import { getWorkspace } from 'sampleData';
+import { useParams } from 'react-router-dom';
+import { generateUUID } from 'utils/helpers';
+import { transformComponentsToNodes } from 'utils/transform';
 
 // Create the FlowContext
 export const FlowContext = createContext<FlowContextProps | undefined>(undefined);
@@ -20,8 +25,13 @@ export const FlowContextProvider: React.FC<{ children: ReactNode }> = ({ childre
 
     const connectingNodeId = useRef<any>();
 
-    const [nodes, setNodes] = useNodesState(initialFlow);
-    const [edges, setEdges] = useEdgesState(initialEdge);
+    const [nodes, setNodes] = useNodesState([]);
+    const [edges, setEdges] = useEdgesState([]);
+
+    // params
+    const { workspaceId } = useParams();
+
+    const [workspace, setWorkspace] = useState<WorkspacesType | Omit<WorkspacesType, 'id'>>(initialWorkspace());
 
     const { project } = useReactFlow();
 
@@ -52,6 +62,18 @@ export const FlowContextProvider: React.FC<{ children: ReactNode }> = ({ childre
     const onNodeDragStart = (evt: any, node: Node) => {
         draggedNodeRef.current = node;
     };
+
+    useEffect(() => {
+        if (workspaceId) {
+            getWorkspace(workspaceId).then((resp) => {
+                setWorkspace(resp);
+                const newData = transformComponentsToNodes(resp);
+                setNodes(newData.nodes);
+                setEdges(newData.edges);
+            });
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [workspaceId]);
 
     // functions and data to return
     const contextValue: FlowContextProps = useMemo<FlowContextProps>(() => {
@@ -104,48 +126,67 @@ export const FlowContextProvider: React.FC<{ children: ReactNode }> = ({ childre
     return <FlowContext.Provider value={contextValue}>{children}</FlowContext.Provider>;
 };
 
-const initialFlow: Node[] = [
-    { id: '1', type: NodesFlowEnum.dot, position: { x: 0, y: 0 }, data: { parent: '', label: 'AA', hideHandle: false } },
-    { id: '2', type: NodesFlowEnum.skeleton, position: { x: -10, y: 100 }, data: { parent: '', label: 'A1', hideHandle: false } },
-    {
-        id: 'group-a',
-        type: 'group',
-        data: { label: null },
-        position: { x: 200, y: 200 }
-    },
-    {
-        id: '3',
-        type: NodesFlowEnum.dot,
-        parentNode: 'group-a',
-        expandParent: true,
-        extent: 'parent',
-        position: { x: 200, y: 200 },
-        positionAbsolute: { x: 200, y: 200 },
-        data: { parent: '', label: 'A2', hideHandle: false }
-    },
-    {
-        id: '4',
-        type: NodesFlowEnum.dot,
-        parentNode: 'group-a',
-        expandParent: true,
-        extent: 'parent',
-        position: { x: 220, y: 220 },
-        positionAbsolute: { x: 220, y: 220 },
-        data: { parent: '', label: 'A3', hideHandle: false }
-    }
-    // { id: '5', type: NodesFlowEnum.dot, position: { x: 240, y: 40 }, parentNode: '1', data: { parent: '', label: 'A4', hideHandle: false } }
-    // { id: 'start', type: 'skeleton', position: { x: 100, y: 0 }, data: { parent: '', label: 'start', hideHandle: true } }
-];
+const initialWorkspace = (): Omit<WorkspacesType, 'id'> => ({
+    name: `Workspace ${generateUUID()}`,
+    description: '',
+    components: []
+});
 
-const initialEdge: Edge[] = [
-    {
-        id: '1',
-        source: '1',
-        target: '2',
-        type: 'smoothstep',
-        animated: true
-    }
-];
+// const initialFlow: Node[] = [
+//     { id: '1', type: NodesFlowEnum.dot, position: { x: 0, y: 0 }, data: { parent: '', label: 'AA', hideHandle: false } },
+//     { id: '2', type: NodesFlowEnum.square, position: { x: -10, y: 100 }, data: { parent: '', label: 'A1', hideHandle: false } },
+//     {
+//         id: '3',
+//         type: NodesFlowEnum.dot,
+//         position: { x: -10, y: 200 },
+//         data: { parent: '', label: 'A2', hideHandle: false }
+//     },
+//     {
+//         id: '4',
+//         type: NodesFlowEnum.skeleton,
+//         position: { x: -10, y: 300 },
+//         data: { parent: '', label: 'A3', hideHandle: false }
+//     },
+//     {
+//         id: '5',
+//         type: NodesFlowEnum.triangle,
+//         position: { x: 100, y: 300 },
+//         data: { parent: '', label: 'A3', hideHandle: false }
+//     }
+//     // { id: '5', type: NodesFlowEnum.dot, position: { x: 240, y: 40 }, parentNode: '1', data: { parent: '', label: 'A4', hideHandle: false } }
+//     // { id: 'start', type: 'skeleton', position: { x: 100, y: 0 }, data: { parent: '', label: 'start', hideHandle: true } }
+// ];
+
+// const initialEdge: Edge[] = [
+//     {
+//         id: '1',
+//         source: '1',
+//         target: '2',
+//         type: 'smoothstep',
+//         animated: false
+//     },
+//     {
+//         id: '2',
+//         source: '2',
+//         target: '3',
+//         type: 'smoothstep',
+//         animated: false
+//     },
+//     {
+//         id: '3',
+//         source: '3',
+//         target: '5',
+//         type: 'smoothstep',
+//         animated: false
+//     },
+//     {
+//         id: '4',
+//         source: '3',
+//         target: '4',
+//         type: 'smoothstep',
+//         animated: true
+//     }
+// ];
 
 // creación: POST https://{{host}}/api/{{workspace}}/workflows
 // busqueda: GET https://{{host}}/api/{{workspace}}/workflows

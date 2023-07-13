@@ -20,6 +20,7 @@ import useFlowContext from '../hooks/useFlowContext';
 import { generatePosition, generateUUID } from '../utils/helpers';
 import NodesFlowEnum from '../types/NodesEnum';
 import { useNodeCreatorProps, useFlowChangesProps, useOnConnectProps } from 'types/flow';
+import flowSettings from 'settings';
 
 export const useFlowChanges = (): useFlowChangesProps => {
     const { setNodes, setEdges } = useFlowContext();
@@ -95,12 +96,14 @@ export const useNodeCreator = (): useNodeCreatorProps => {
             }
         };
 
-        const nodeRect = getRectOfNodes([selectedNode!, newNode]);
-        const parenNodeChildren = getOutgoers(selectedNode!, nodes, edges)?.length;
+        // const nodeRect = getRectOfNodes([selectedNode!, newNode]);
+        // const parenNodeChildren = getOutgoers(selectedNode!, nodes, edges)?.length;
+        const parentNodePosition = selectedNode!.position;
 
+        // TODO: SET POSITIONS
         newNode.position = {
-            x: nodeRect.x + parenNodeChildren * 80,
-            y: newNode.position.y
+            x: parentNodePosition.x,
+            y: parentNodePosition.y + (selectedNode!.height ?? flowSettings.nodeSize) + flowSettings.verticalGap
         };
 
         setNodes((nds) => [...nds, newNode]);
