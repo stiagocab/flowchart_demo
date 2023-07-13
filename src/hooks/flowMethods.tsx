@@ -17,10 +17,11 @@ import {
 } from 'reactflow';
 
 import useFlowContext from '../hooks/useFlowContext';
-import { generatePosition, generateUUID } from '../utils/helpers';
+import { generatePosition, generateUUID, xCenterNode } from '../utils/helpers';
 import NodesFlowEnum from '../types/NodesEnum';
 import { useNodeCreatorProps, useFlowChangesProps, useOnConnectProps } from 'types/flow';
 import flowSettings from 'settings';
+import { addPositionToNode, createPositionToNewChild } from 'utils/transform';
 
 export const useFlowChanges = (): useFlowChangesProps => {
     const { setNodes, setEdges } = useFlowContext();
@@ -85,28 +86,51 @@ export const useNodeCreator = (): useNodeCreatorProps => {
 
         const newNodeId = `node-${nodeType}-${newUUID}`;
 
-        const newNode: Node = {
+        let newNode: Node = {
             id: newNodeId,
             position: generatePosition(selectedNode!, newNodeWidth),
             type: nodeType,
             data: {
                 isFinal: false,
                 parent: selectedNode?.id,
-                label: `${nodeType.toUpperCase()}`
+                label: `${nodeType.toUpperCase()}`,
+                children: []
             }
         };
 
-        // const nodeRect = getRectOfNodes([selectedNode!, newNode]);
-        // const parenNodeChildren = getOutgoers(selectedNode!, nodes, edges)?.length;
-        const parentNodePosition = selectedNode!.position;
-
-        // TODO: SET POSITIONS
-        newNode.position = {
-            x: parentNodePosition.x,
-            y: parentNodePosition.y + (selectedNode!.height ?? flowSettings.nodeSize) + flowSettings.verticalGap
+        const parentNode: Node = {
+            ...selectedNode!,
+            data: { ...selectedNode!.data, children: [...selectedNode!.data.children, newNodeId] }
         };
 
-        setNodes((nds) => [...nds, newNode]);
+        let updatedSiblings: Node[] = [];
+        const siblingsIds: string[] = selectedNode!.data.children;
+        let siblings: Node[] = [];
+
+        if (siblingsIds) {
+            siblings = nodes.filter((item) => siblingsIds.includes(item.id));
+        }
+
+        updatedSiblings = createPositionToNewChild(newNode, parentNode, siblings);
+
+        setNodes((nds) => [
+            ...nds.map((item) => {
+                if (item.id === parentNode.id) {
+                    return parentNode;
+                }
+
+                let updated = updatedSiblings.find((itemA) => itemA.id === item.id);
+                // console.log('updated', updated);
+
+                if (updated) {
+                    return updated;
+                }
+
+                return item;
+            }),
+            updatedSiblings.find((itemA) => itemA.id === newNodeId)!
+            // ...newUpdatedNodes
+        ]);
 
         const newEdge: Edge = {
             id: `edge-${nodeType}-${newUUID}`,

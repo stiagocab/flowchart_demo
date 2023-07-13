@@ -39,9 +39,11 @@ export default function CustomFlow() {
     const { nodesTypes } = useNodesTypes();
 
     const onNodeClick = (e: React.MouseEvent, node: Node) => {
+        console.log('Node', node);
+
         setSelectedNodeId(node.id);
         openDrawerFromNode(node);
-        openForm();
+        // openForm();
     };
 
     const onPaneClick = (event: React.MouseEvent) => {

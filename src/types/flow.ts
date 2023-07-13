@@ -85,9 +85,10 @@ export type WorkspacesType = {
         config: {
             name: string;
             description: string;
-            type: string;
+            type: string; // Pass, Task, Parallel, Choise;
             params: { [key: string]: any }[];
         };
+        customData: { [key: string]: any };
         input?: string;
         nextId?: string;
         prevId?: string;

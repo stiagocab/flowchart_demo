@@ -88,7 +88,7 @@ export const addNodesPositions = (primalNodes: NodeWithoutPosition[]): Node[] =>
     return nodes;
 };
 
-const addPositionToNode = (prevNode: NodeWithoutPosition, parentPosition?: XYPosition): Node => {
+export const addPositionToNode = (prevNode: NodeWithoutPosition, parentPosition?: XYPosition): Node => {
     if (!parentPosition) {
         return { ...prevNode, position: { x: 0, y: 0 } };
     }
@@ -99,6 +99,28 @@ const addPositionToNode = (prevNode: NodeWithoutPosition, parentPosition?: XYPos
     };
 
     return newNode;
+};
+
+export const createPositionToNewChild = (prevNode: NodeWithoutPosition | Node, parent: Node, siblings?: Node[]): Node[] => {
+    // if (!siblings || siblings.length === 0) {
+    //     const newNode: Node = {
+    //         ...prevNode,
+    //         position: {
+    //             x: parent.position.x + (parent.width ?? 0) / 2,
+    //             y: parent.position.y + flowSettings.verticalGap + flowSettings.nodeSize
+    //         }
+    //     };
+    //     return [newNode];
+    // }
+
+    const relactedNodes: Node[] = siblings ?? [];
+
+    const generatedNodes = generatePositionsFromCenter(
+        [...relactedNodes, prevNode],
+        parent.position,
+        parent.position.x + flowSettings.nodeSize / 2
+    );
+    return generatedNodes;
 };
 
 const linkChildren = (nodes: NodeWithoutPosition[]): { nodesWithoutPosition: NodeWithoutPosition[]; edges: Edge[] } => {

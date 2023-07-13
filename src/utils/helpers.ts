@@ -191,20 +191,35 @@ export const createGroupPosition = (nodes: Node[]): { position: XYPosition; widt
 };
 
 export const generatePositionsFromCenter = (prevNodes: Omit<Node, 'position'>[], parentPosition: XYPosition, center: number): Node[] => {
-    const width = flowSettings.nodeSize;
+    const defaultWidth = flowSettings.nodeSize;
     const gap = flowSettings.horizontalGap;
-    let nodes: Node[] = [];
-    const yPosition = parentPosition.y + flowSettings.verticalGap + flowSettings.nodeSize;
 
-    const totalWidth = prevNodes.length * width + (prevNodes.length - 1) * gap;
+    let nodes: Node[] = [];
+    const yPosition = parentPosition.y + flowSettings.verticalGap * (prevNodes.length > 1 ? 2 : 1) + flowSettings.nodeSize;
+
+    let totalWidth = 0;
+
+    prevNodes.forEach((prevNode) => {
+        const nodeWidth = prevNode.width ?? defaultWidth;
+
+        totalWidth += nodeWidth;
+    });
+
+    totalWidth += (prevNodes.length - 1) * gap;
 
     const startPosition = center - totalWidth / 2;
 
+    let lastXPosition: number = startPosition;
+
     prevNodes.forEach((item, index) => {
+        const nodeWidth = item.width ?? defaultWidth;
         let position = {
-            x: startPosition + (gap + width) * index,
+            x: lastXPosition,
+            // x: startPosition + (gap + width) * index,
             y: yPosition
         };
+
+        lastXPosition = position.x + nodeWidth + gap;
 
         nodes = [...nodes, { ...item, position }];
     });

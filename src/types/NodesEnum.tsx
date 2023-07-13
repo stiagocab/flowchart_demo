@@ -4,5 +4,6 @@ enum NodesFlowEnum {
     square = 'square',
     triangle = 'triangle'
 }
+// Pass, Task, Parallel, Choise;
 
 export default NodesFlowEnum;

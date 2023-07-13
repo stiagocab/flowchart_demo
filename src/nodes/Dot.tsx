@@ -2,15 +2,16 @@ import { Box, Typography, useTheme } from '@mui/material';
 import { Position } from 'reactflow';
 import { ICustomNodeProps } from '../types/nodes';
 import CustomHandle from 'ui-component/flow/CustomHandle';
+import flowSettings from 'settings';
 
-export default function DotNode({ data, selected }: ICustomNodeProps) {
+export default function DotNode({ data, selected, ...props }: ICustomNodeProps) {
     return (
         <>
             <CustomHandle hide={data.hideHandle} type="target" position={Position.Top} id="dot-target" />
             <Box
                 sx={{
-                    width: 50,
-                    height: 50,
+                    width: props.id ? flowSettings.nodeSize : 50,
+                    height: props.id ? flowSettings.nodeSize : 50,
                     boxSizing: 'border-box',
                     border: '2px solid',
                     borderColor: selected ? 'primary.main' : 'divider',
