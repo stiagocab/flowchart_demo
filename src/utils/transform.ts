@@ -1,19 +1,13 @@
 import { Edge, Node, XYPosition } from 'reactflow';
 import NodesFlowEnum from 'types/NodesEnum';
-import { WorkspacesType } from 'types/flow';
 import { generatePositionsFromCenter } from './helpers';
 import flowSettings from 'settings';
+import { FlowNodeType } from 'types/nodes';
+import { IWorkspace } from 'types/workspace';
 
-type NodeWithoutPosition = Omit<Node, 'position'>;
+type NodeWithoutPosition = Omit<FlowNodeType, 'position'>;
 
-// type CustomNode = Node & {
-//     data: {
-//         parent: string;
-//         children: string[]
-//     }
-// }
-
-export const transformComponentsToNodes = (workspace: WorkspacesType): { nodes: Node[]; edges: Edge[] } => {
+export const transformComponentsToNodes = (workspace: IWorkspace): { nodes: Node[]; edges: Edge[] } => {
     const { components } = workspace;
 
     const nodesWithoutPosition: NodeWithoutPosition[] = components.map((item) => {
@@ -22,8 +16,12 @@ export const transformComponentsToNodes = (workspace: WorkspacesType): { nodes: 
             type: NodesFlowEnum.square,
             width: flowSettings.nodeSize,
             height: flowSettings.nodeSize,
-            // TODO: PREGUNTAR A LUCI QUE PASA CUANDO SON VARIOS HIJOS
-            data: { ...item.config, parent: item.prevId ?? null, children: item.nextId ? [item.nextId] : [], label: item.config.name }
+            data: {
+                ...item.config,
+                parent: item.prevId ?? null,
+                children: item.nextId ? [item.nextId] : [],
+                label: item.customData?.label ?? item.config.name
+            }
         };
 
         return node;

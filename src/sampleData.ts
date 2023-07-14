@@ -1,6 +1,6 @@
-import { WorkspacesType } from 'types/flow';
+import { IWorkspace } from 'types/workspace';
 
-const _mockData: WorkspacesType[] = [
+const _mockData: IWorkspace[] = [
     {
         id: 11,
         name: 'workflow 1',
@@ -116,12 +116,16 @@ const _mockData: WorkspacesType[] = [
                 config: {
                     name: 'com-1',
                     description: 'This is the first component',
-                    type: 'Pass', //, "Pass"(pass data) ,"Task" (Lambda, s3 etc) ,"Parallel" (en paralelo)
+                    type: 'Pass', //, "Pass"(pass data) ,"Task" (Lambda, s3 etc) ,"Parallel" (en paralelo), "Choice", "State"
                     params: [
                         {
                             key: 'value'
                         }
                     ]
+                },
+                customData: {
+                    label: 'Main',
+                    postion: { x: 0, y: 0 }
                 },
                 input: 'ComponentIO',
                 nextId: 'com-2'
@@ -136,6 +140,10 @@ const _mockData: WorkspacesType[] = [
                             key: 'value'
                         }
                     ]
+                },
+                customData: {
+                    label: 'Name',
+                    postion: { x: 0, y: 0 }
                 },
                 input: 'ComponentIO',
                 prevId: 'com-1',
@@ -243,19 +251,19 @@ const _mockData: WorkspacesType[] = [
     }
 ];
 
-export const getMockData = (): Promise<WorkspacesType[]> => {
+export const getMockData = (): Promise<IWorkspace[]> => {
     return new Promise((resolve) => {
         setTimeout(() => {
-            const mockData: WorkspacesType[] = [..._mockData];
+            const mockData: IWorkspace[] = [..._mockData];
             resolve(mockData);
         }, 500);
     });
 };
 
-export const getWorkspace = (workspaceId: number | string): Promise<WorkspacesType> => {
+export const getWorkspace = (workspaceId: number | string): Promise<IWorkspace> => {
     return new Promise((resolve, reject) => {
         setTimeout(() => {
-            const mockData: WorkspacesType | undefined = _mockData.find((item) => item.id === Number(workspaceId));
+            const mockData: IWorkspace | undefined = _mockData.find((item) => item.id === Number(workspaceId));
 
             resolve(mockData!);
         }, 500);

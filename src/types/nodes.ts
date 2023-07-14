@@ -1,6 +1,15 @@
 import { Node } from 'reactflow';
 import NodesFlowEnum from './NodesEnum';
 
+export type FlowNodeType = Node & {
+    type: NodesFlowEnum | string;
+    data: {
+        label: string;
+        children: string[];
+        parent?: string | null;
+    };
+};
+
 export interface INodeConditions {
     nodeName: NodesFlowEnum;
     couldBeInitial: boolean;

@@ -8,7 +8,6 @@ import {
     OnConnectStartParams,
     OnEdgesChange,
     OnNodesChange,
-    getRectOfNodes,
     Node,
     getOutgoers,
     Edge,
@@ -17,11 +16,10 @@ import {
 } from 'reactflow';
 
 import useFlowContext from '../hooks/useFlowContext';
-import { generatePosition, generateUUID, xCenterNode } from '../utils/helpers';
+import { generatePosition, generateUUID } from '../utils/helpers';
 import NodesFlowEnum from '../types/NodesEnum';
 import { useNodeCreatorProps, useFlowChangesProps, useOnConnectProps } from 'types/flow';
-import flowSettings from 'settings';
-import { addPositionToNode, createPositionToNewChild } from 'utils/transform';
+import { createPositionToNewChild } from 'utils/transform';
 
 export const useFlowChanges = (): useFlowChangesProps => {
     const { setNodes, setEdges } = useFlowContext();
@@ -199,3 +197,7 @@ export const useNodeCreator = (): useNodeCreatorProps => {
 
     return { createChildNode, replaceNode, onNodesDelete };
 };
+
+// pass => return data
+// parallel =>
+// task => functions

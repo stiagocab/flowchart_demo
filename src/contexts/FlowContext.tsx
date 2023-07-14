@@ -3,11 +3,12 @@ import React, { createContext, ReactNode, useMemo, useState, useRef, useCallback
 
 import { Edge, Node, ReactFlowInstance, useEdgesState, useNodesState, useReactFlow, useStoreApi } from 'reactflow';
 import NodesFlowEnum from '../types/NodesEnum';
-import { FlowContextProps, WorkspacesType } from 'types/flow';
+import { FlowContextProps } from 'types/flow';
 import { getWorkspace } from 'sampleData';
 import { useParams } from 'react-router-dom';
 import { generateUUID } from 'utils/helpers';
 import { transformComponentsToNodes } from 'utils/transform';
+import { IWorkspace } from 'types/workspace';
 
 // Create the FlowContext
 export const FlowContext = createContext<FlowContextProps | undefined>(undefined);
@@ -31,7 +32,7 @@ export const FlowContextProvider: React.FC<{ children: ReactNode }> = ({ childre
     // params
     const { workspaceId } = useParams();
 
-    const [workspace, setWorkspace] = useState<WorkspacesType | Omit<WorkspacesType, 'id'>>(initialWorkspace());
+    const [workspace, setWorkspace] = useState<IWorkspace | Omit<IWorkspace, 'id'>>(initialWorkspace());
 
     const { project } = useReactFlow();
 
@@ -126,7 +127,7 @@ export const FlowContextProvider: React.FC<{ children: ReactNode }> = ({ childre
     return <FlowContext.Provider value={contextValue}>{children}</FlowContext.Provider>;
 };
 
-const initialWorkspace = (): Omit<WorkspacesType, 'id'> => ({
+const initialWorkspace = (): Omit<IWorkspace, 'id'> => ({
     name: `Workspace ${generateUUID()}`,
     description: '',
     components: []

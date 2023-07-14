@@ -6,7 +6,6 @@ import {
     OnConnectStartParams,
     OnEdgesChange,
     OnNodesChange,
-    OnSelectionChangeParams,
     Project,
     ReactFlowInstance,
     ReactFlowState
@@ -75,22 +74,4 @@ export type useNodeCreatorProps = {
     createChildNode: (nodeType: NodesFlowEnum | string, newNodeWidth?: number) => void;
     replaceNode: (nodeType: NodesFlowEnum | string) => void;
     onNodesDelete: (deleted: Node[]) => void;
-};
-
-export type WorkspacesType = {
-    id: number;
-    name: string;
-    description: string;
-    components: {
-        config: {
-            name: string;
-            description: string;
-            type: string; // Pass, Task, Parallel, Choise;
-            params: { [key: string]: any }[];
-        };
-        customData: { [key: string]: any };
-        input?: string;
-        nextId?: string;
-        prevId?: string;
-    }[];
 };

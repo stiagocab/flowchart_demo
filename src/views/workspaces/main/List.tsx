@@ -21,10 +21,10 @@ import { Link } from 'react-router-dom';
 import { FLOW_ROUTES, generateRoute } from 'routes/pathGenerator';
 import { getMockData } from 'sampleData';
 import { useEffect, useState } from 'react';
-import { WorkspacesType } from 'types/flow';
+import { IWorkspace } from 'types/workspace';
 
 export default function WorkspacesList() {
-    const [workspaces, setWorkspaces] = useState<WorkspacesType[] | null>(null);
+    const [workspaces, setWorkspaces] = useState<IWorkspace[] | null>(null);
     const [isLoading, setIsLoading] = useState(true);
 
     useEffect(() => {
