@@ -1,8 +1,9 @@
 enum NodesFlowEnum {
-    skeleton = 'skeleton',
-    dot = 'dot',
-    square = 'square',
-    triangle = 'triangle'
+    choice = 'Choice',
+    task = 'Task',
+    parallel = 'Parallel',
+    pass = 'Pass',
+    skeleton = 'skeleton'
 }
 // Pass, Task, Parallel, Choise;
 

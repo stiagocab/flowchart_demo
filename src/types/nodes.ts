@@ -11,12 +11,15 @@ export type FlowNodeType = Node & {
 };
 
 export interface INodeConditions {
-    nodeName: NodesFlowEnum;
+    nodeName: NodesFlowEnum | string;
     couldBeInitial: boolean;
     coudlBeFinal: boolean;
-    childrenNodesAllowed: NodesFlowEnum[];
-    multilpleChildren: boolean;
-    maxChildren?: number;
+    maxParentConnections: number; // -1 to infinity
+    maxChildConnections: number;
+    // isConnectable: true;
+    // childrenNodesAllowed: NodesFlowEnum[];
+    // multilpleChildren: boolean;
+    // maxChildren?: number;
 }
 
 export interface INodesData extends Partial<INodeConditions> {

@@ -1,38 +1,49 @@
 import NodesFlowEnum from 'types/NodesEnum';
 import { INodeConditions } from 'types/nodes';
 
-const nodesRules: INodeConditions[] = [
-    {
+const nodesRules: Record<NodesFlowEnum | string, INodeConditions> = {
+    [`${NodesFlowEnum.choice}`]: {
         nodeName: NodesFlowEnum.skeleton,
-        couldBeInitial: false,
+        couldBeInitial: true,
         coudlBeFinal: false,
-        childrenNodesAllowed: [NodesFlowEnum.dot, NodesFlowEnum.square, NodesFlowEnum.triangle],
-        multilpleChildren: false
+        maxChildConnections: 2,
+        maxParentConnections: 1
     },
-    {
-        nodeName: NodesFlowEnum.dot,
+    [`${NodesFlowEnum.parallel}`]: {
+        nodeName: NodesFlowEnum.parallel,
         couldBeInitial: true,
-        coudlBeFinal: true,
-        childrenNodesAllowed: [NodesFlowEnum.dot, NodesFlowEnum.square, NodesFlowEnum.skeleton],
-        multilpleChildren: true,
-        maxChildren: 2
+        coudlBeFinal: false,
+        maxParentConnections: 2,
+        maxChildConnections: 2
     },
-    {
-        nodeName: NodesFlowEnum.square,
+    [`${NodesFlowEnum.pass}`]: {
+        nodeName: NodesFlowEnum.pass,
         couldBeInitial: true,
-        coudlBeFinal: true,
-        childrenNodesAllowed: [NodesFlowEnum.dot, NodesFlowEnum.square, NodesFlowEnum.skeleton, NodesFlowEnum.triangle],
-        multilpleChildren: true,
-        maxChildren: 1
+        coudlBeFinal: false,
+        maxChildConnections: 1,
+        maxParentConnections: 1
     },
-    {
-        nodeName: NodesFlowEnum.triangle,
+    [`${NodesFlowEnum.task}`]: {
+        nodeName: NodesFlowEnum.task,
         couldBeInitial: true,
+        coudlBeFinal: false,
+        maxChildConnections: 1,
+        maxParentConnections: 1
+    },
+    [`${NodesFlowEnum.skeleton}`]: {
+        nodeName: NodesFlowEnum.skeleton,
+        couldBeInitial: true,
+        coudlBeFinal: false,
+        maxParentConnections: Infinity,
+        maxChildConnections: 0
+    },
+    [`Final`]: {
+        nodeName: 'Final',
         coudlBeFinal: true,
-        childrenNodesAllowed: [NodesFlowEnum.dot, NodesFlowEnum.square, NodesFlowEnum.skeleton, NodesFlowEnum.triangle],
-        multilpleChildren: true,
-        maxChildren: 1
+        couldBeInitial: false,
+        maxParentConnections: Infinity,
+        maxChildConnections: 0
     }
-];
+};
 
 export default nodesRules;

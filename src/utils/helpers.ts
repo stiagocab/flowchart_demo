@@ -211,11 +211,10 @@ export const generatePositionsFromCenter = (prevNodes: Omit<Node, 'position'>[],
 
     let lastXPosition: number = startPosition;
 
-    prevNodes.forEach((item, index) => {
+    prevNodes.forEach((item) => {
         const nodeWidth = item.width ?? defaultWidth;
         let position = {
             x: lastXPosition,
-            // x: startPosition + (gap + width) * index,
             y: yPosition
         };
 

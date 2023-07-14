@@ -2,252 +2,88 @@ import { IWorkspace } from 'types/workspace';
 
 const _mockData: IWorkspace[] = [
     {
-        id: 11,
-        name: 'workflow 1',
-        description: 'Test workflow',
+        id: 10,
+        name: 'Workspace 10',
+        description: 'aliqua cupidatat voluptate ipsum tempor',
         components: [
             {
-                config: {
-                    name: 'com-1',
-                    description: 'This is the first component',
-                    type: 'Pass', //, "Pass"(pass data) ,"Task" (Lambda, s3 etc) ,"Parallel" (en paralelo)
-                    params: [
-                        {
-                            key: 'value'
-                        }
-                    ]
-                },
-                input: 'ComponentIO',
-                nextId: 'com-2'
+                id: 'A',
+                description: 'Component A',
+                type: 'Pass',
+                inputData: [],
+                params: [],
+                label: 'Component A'
             },
             {
-                config: {
-                    name: 'com-2',
-                    description: 'This is the second and last component',
-                    type: 'Pass', //, "Task" ,"Parallel"
-                    params: [
-                        {
-                            key: 'value'
-                        }
-                    ]
-                },
-                input: 'ComponentIO',
-                prevId: 'com-1',
-                nextId: 'com-3'
+                id: 'B',
+                description: 'Component B',
+                type: 'Task',
+                inputData: [],
+                params: [],
+                label: 'Component B',
+                prevId: 'A'
             },
             {
-                config: {
-                    name: 'com-3',
-                    description: 'This is the third and last component',
-                    type: 'Pass', //, "Task" ,"Parallel"
-                    params: [
-                        {
-                            key: 'value'
-                        }
-                    ]
-                },
-                input: 'ComponentIO',
-                prevId: 'com-2'
+                id: 'C',
+                description: 'Component C',
+                type: 'Parallel',
+                inputData: [],
+                params: [],
+                label: 'Component C',
+                prevId: 'A'
             },
             {
-                config: {
-                    name: 'com-2-A',
-                    description: 'This is the four and last component',
-                    type: 'Pass', //, "Task" ,"Parallel"
-                    params: [
-                        {
-                            key: 'value'
-                        }
-                    ]
-                },
-                input: 'ComponentIO',
-                prevId: 'com-2'
+                id: 'D',
+                description: 'Component D',
+                type: 'Choice',
+                inputData: [],
+                params: [],
+                label: 'Component D',
+                prevId: 'C'
             },
             {
-                config: {
-                    name: 'com-2-B',
-                    description: 'This is the four and last component',
-                    type: 'Pass', //, "Task" ,"Parallel"
-                    params: [
-                        {
-                            key: 'value'
-                        }
-                    ]
-                },
-                input: 'ComponentIO',
-                prevId: 'com-2'
+                id: 'E',
+                description: 'Component E',
+                type: 'State',
+                inputData: [],
+                params: [],
+                label: 'Component E',
+                prevId: 'C'
             },
             {
-                config: {
-                    name: 'com-2-C',
-                    description: 'This is the four and last component',
-                    type: 'Pass', //, "Task" ,"Parallel"
-                    params: [
-                        {
-                            key: 'value'
-                        }
-                    ]
-                },
-                input: 'ComponentIO',
-                prevId: 'com-2'
-            },
-            {
-                config: {
-                    name: 'com-2-D',
-                    description: 'This is the four and last component',
-                    type: 'Pass', //, "Task" ,"Parallel"
-                    params: [
-                        {
-                            key: 'value'
-                        }
-                    ]
-                },
-                input: 'ComponentIO',
-                prevId: 'com-2'
+                id: 'F',
+                description: 'Component F',
+                type: 'Task',
+                inputData: [],
+                params: [],
+                label: 'Component F',
+                prevId: 'B'
             }
         ]
     },
     {
+        id: 11,
+        name: 'Workspace 11',
+        description: 'ea id qui duis reprehenderit',
+        components: []
+    },
+    {
         id: 12,
-        name: 'workflow 2',
-        description: 'Test workflow',
-        components: [
-            {
-                config: {
-                    name: 'com-1',
-                    description: 'This is the first component',
-                    type: 'Pass', //, "Pass"(pass data) ,"Task" (Lambda, s3 etc) ,"Parallel" (en paralelo), "Choice", "State"
-                    params: [
-                        {
-                            key: 'value'
-                        }
-                    ]
-                },
-                customData: {
-                    label: 'Main',
-                    postion: { x: 0, y: 0 }
-                },
-                input: 'ComponentIO',
-                nextId: 'com-2'
-            },
-            {
-                config: {
-                    name: 'com-2',
-                    description: 'This is the second and last component',
-                    type: 'Pass', //, "Task" ,"Parallel"
-                    params: [
-                        {
-                            key: 'value'
-                        }
-                    ]
-                },
-                customData: {
-                    label: 'Name',
-                    postion: { x: 0, y: 0 }
-                },
-                input: 'ComponentIO',
-                prevId: 'com-1',
-                nextId: 'com-3'
-            },
-            {
-                config: {
-                    name: 'com-2-a',
-                    description: 'This is the second and last component',
-                    type: 'Pass', //, "Task" ,"Parallel"
-                    params: [
-                        {
-                            key: 'value'
-                        }
-                    ]
-                },
-                input: 'ComponentIO',
-                prevId: 'com-2'
-            },
-            {
-                config: {
-                    name: 'com-2-b',
-                    description: 'This is the second and last component',
-                    type: 'Pass', //, "Task" ,"Parallel"
-                    params: [
-                        {
-                            key: 'value'
-                        }
-                    ]
-                },
-                input: 'ComponentIO',
-                prevId: 'com-2'
-            },
-            {
-                config: {
-                    name: 'com-2-c',
-                    description: 'This is the second and last component',
-                    type: 'Pass', //, "Task" ,"Parallel"
-                    params: [
-                        {
-                            key: 'value'
-                        }
-                    ]
-                },
-                input: 'ComponentIO',
-                prevId: 'com-2'
-            },
-            {
-                config: {
-                    name: 'com-2-c-1',
-                    description: 'This is the second and last component',
-                    type: 'Pass', //, "Task" ,"Parallel"
-                    params: [
-                        {
-                            key: 'value'
-                        }
-                    ]
-                },
-                input: 'ComponentIO',
-                prevId: 'com-2-c'
-            },
-            {
-                config: {
-                    name: 'com-3',
-                    description: 'This is the third and last component',
-                    type: 'Pass', //, "Task" ,"Parallel"
-                    params: [
-                        {
-                            key: 'value'
-                        }
-                    ]
-                },
-                input: 'ComponentIO',
-                prevId: 'com-2'
-            },
-            {
-                config: {
-                    name: 'com-3-A',
-                    description: 'This is the third and last component',
-                    type: 'Pass', //, "Task" ,"Parallel"
-                    params: [
-                        {
-                            key: 'value'
-                        }
-                    ]
-                },
-                input: 'ComponentIO',
-                prevId: 'com-3'
-            },
-            {
-                config: {
-                    name: 'com-3-A-1',
-                    description: 'This is the third and last component',
-                    type: 'Pass', //, "Task" ,"Parallel"
-                    params: [
-                        {
-                            key: 'value'
-                        }
-                    ]
-                },
-                input: 'ComponentIO',
-                prevId: 'com-3-A'
-            }
-        ]
+        name: 'Workspace 12',
+        description: 'Lorem dolore dolore tempor ullamco',
+        components: []
+    },
+    {
+        id: 13,
+        name: 'Workspace 13',
+        description: 'adipisicing laborum sint in eiusmod veniam ex adipisicing fugiat sint nostrud duis reprehenderit',
+        components: []
+    },
+    {
+        id: 14,
+        name: 'Workspace 14',
+        description: 'fugiat id ullamco qui nulla reprehenderit culpa mollit',
+        components: []
     }
 ];
 
@@ -268,4 +104,44 @@ export const getWorkspace = (workspaceId: number | string): Promise<IWorkspace> 
             resolve(mockData!);
         }, 500);
     });
+};
+
+type NodeComponent = {
+    id: string;
+    description: string;
+    type: string; // 'Pass', 'Task', 'Parallel', 'Choise', 'State';
+    inputData: { [key: string]: any }[];
+    params: { [key: string]: any }[];
+    label: string;
+    position?: { x: number; y: number };
+    nextId?: string;
+    prevId?: string;
+};
+
+export const nodsGenerator = (max: number = 10): NodeComponent[] => {
+    let components: NodeComponent[] = [];
+    let i = 0;
+    const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+
+    while (i <= max) {
+        const id = alphabet[i];
+        const prevId = alphabet[i - 1] || null;
+
+        let component: NodeComponent = {
+            id,
+            description: `Component ${id}`,
+            type: 'Pass',
+            inputData: [],
+            params: [],
+            label: `Component ${id}`
+        };
+
+        if (prevId) {
+            component.prevId = prevId;
+        }
+
+        components = [...components, component];
+    }
+
+    return [];
 };

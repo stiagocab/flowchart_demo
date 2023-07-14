@@ -7,20 +7,31 @@ import { IWorkspace } from 'types/workspace';
 
 type NodeWithoutPosition = Omit<FlowNodeType, 'position'>;
 
+const setType = (type: string): NodesFlowEnum | string => {
+    if (Object.values(NodesFlowEnum).includes(type as NodesFlowEnum)) {
+        // If the type is a valid NodesFlowEnum value
+        return type as NodesFlowEnum;
+    } else {
+        // If the type is not a valid NodesFlowEnum value
+        return type as string;
+    }
+};
+
 export const transformComponentsToNodes = (workspace: IWorkspace): { nodes: Node[]; edges: Edge[] } => {
     const { components } = workspace;
 
     const nodesWithoutPosition: NodeWithoutPosition[] = components.map((item) => {
         const node: NodeWithoutPosition = {
-            id: item.config.name,
-            type: NodesFlowEnum.square,
+            id: item.id,
+            type: setType(item.type),
             width: flowSettings.nodeSize,
             height: flowSettings.nodeSize,
             data: {
-                ...item.config,
+                params: item.params,
+                inputData: item.inputData,
                 parent: item.prevId ?? null,
                 children: item.nextId ? [item.nextId] : [],
-                label: item.customData?.label ?? item.config.name
+                label: item?.label ?? item.id
             }
         };
 

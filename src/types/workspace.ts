@@ -3,14 +3,13 @@ export interface IWorkspace {
     name: string;
     description: string;
     components: {
-        config: {
-            name: string;
-            description: string;
-            type: string; // Pass, Task, Parallel, Choise;
-            params: { [key: string]: any }[];
-        };
-        customData?: { label: string; position?: number; [key: string]: any };
-        input?: string;
+        id: string;
+        description: string;
+        type: string; // 'Pass', 'Task', 'Parallel', 'Choise', 'State';
+        inputData: { [key: string]: any }[];
+        params: { [key: string]: any }[];
+        label: string;
+        position?: { x: number; y: number };
         nextId?: string;
         prevId?: string;
     }[];

@@ -1,18 +1,25 @@
 import { ComponentType, useMemo } from 'react';
+
 import { NodeTypes } from 'reactflow';
-import SkeletonNode from 'nodes/SkeletonNode';
+
+// enum
 import NodesFlowEnum from 'types/NodesEnum';
-import DotNode from 'nodes/Dot';
-import SquareNode from 'nodes/Square';
-import TriangleNode from 'nodes/TriangleNode';
+
+// nodes
+import ChoiceNode from 'nodes/ChoiceNode';
+import ParallelNode from 'nodes/ParallelNode';
+import PassNode from 'nodes/PassNode';
+import TaskNode from 'nodes/TaskNode';
+import SkeletonNode from 'nodes/SkeletonNode';
 
 export default function useNodesTypes() {
     const nodesTypes: NodeTypes = useMemo(
         () => ({
-            [NodesFlowEnum.skeleton]: SkeletonNode,
-            [NodesFlowEnum.dot]: DotNode,
-            [NodesFlowEnum.square]: SquareNode,
-            [NodesFlowEnum.triangle]: TriangleNode
+            [NodesFlowEnum.choice]: ChoiceNode,
+            [NodesFlowEnum.parallel]: ParallelNode,
+            [NodesFlowEnum.pass]: PassNode,
+            [NodesFlowEnum.task]: TaskNode,
+            [NodesFlowEnum.skeleton]: SkeletonNode
         }),
         []
     );

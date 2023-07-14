@@ -7,7 +7,6 @@ import CloseIcon from '@mui/icons-material/Close';
 import { useNodeCreator } from 'hooks/flowMethods';
 import useFlowContext from 'hooks/useFlowContext';
 import useNodesTypes from 'hooks/useNodesTypes';
-import nodesRules from 'settings/NodesRules';
 
 // types
 import NodesFlowEnum from 'types/NodesEnum';
@@ -59,8 +58,7 @@ const NodeSelectorSidebar = ({ isOpen, handleClose }: { isOpen: boolean; handleC
                 {Object.entries(nodesSide).map(([nodeTypeKey, NodeType]) => {
                     const nodeName = nodeTypeKey as NodesFlowEnum;
 
-                    const isAllow: boolean =
-                        nodesRules.find((item) => item.nodeName === selectedNode?.type)?.childrenNodesAllowed.includes(nodeName) ?? true;
+                    const isAllow: boolean = true;
 
                     if (!isAllow) return null;
 
